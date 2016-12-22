@@ -122,6 +122,7 @@ typedef struct {
 	uint32_t					rampdown_steps;
 	/// 24.8 fixed point timer value, maximum speed
 	uint32_t					c_min;
+  #endif
   #ifdef LOOKAHEAD
   // With the look-ahead functionality, it is possible to retain physical
   // movement between G1 moves. These variables keep track of the entry and
@@ -132,7 +133,6 @@ typedef struct {
   uint32_t          start_steps; ///< would be required to reach start feedrate
   uint32_t          end_steps; ///< would be required to stop from end feedrate
   #endif
-	#endif
 	#ifdef ACCELERATION_TEMPORAL
   axes_uint32_t     step_interval;   ///< time between steps on each axis
   axes_uint32_t     c_min;           ///< max step rate in the current dda
