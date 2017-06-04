@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeLite_Workspace Name="teacup3d" Database="" Version="10.0.0">
+  <Project Name="teacup3d" Path="teacup3d.project" Active="Yes"/>
+  <Project Name="treacup_delta" Path="../Teacup_Firmware-delta/treacup_delta.project" Active="No"/>
+  <Project Name="grbl" Path="../grbl-master/grbl.project" Active="No"/>
+  <BuildMatrix>
+    <WorkspaceConfiguration Name="Debug" Selected="yes">
+      <Environment/>
+      <Project Name="teacup3d" ConfigName="Debug"/>
+      <Project Name="treacup_delta" ConfigName="Debug"/>
+      <Project Name="grbl" ConfigName="Debug"/>
+    </WorkspaceConfiguration>
+    <WorkspaceConfiguration Name="Release" Selected="yes">
+      <Environment/>
+      <Project Name="teacup3d" ConfigName="Release"/>
+      <Project Name="treacup_delta" ConfigName="Release"/>
+      <Project Name="grbl" ConfigName="Release"/>
+    </WorkspaceConfiguration>
+  </BuildMatrix>
+</CodeLite_Workspace>

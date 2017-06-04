@@ -508,6 +508,7 @@ void temp_heater_tick() {
       // Signal all the temperature probes to begin reading. Each will run the
       // pid loop for us when it completes.
       temp_sensors_runtime[i].active = 1;
+      // 3d only if (temp_sensors_runtime[i].last_read_temp>(70*4))heater_set(HEATER_FAN, 255);
     }
 }
 

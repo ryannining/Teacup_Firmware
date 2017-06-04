@@ -186,6 +186,32 @@ uint8_t gcode_parse_char(uint8_t c) {
 					if (DEBUG_ECHO && (debug_flags & DEBUG_ECHO))
             serwrite_int32(next_target.target.axis[Z]);
 					break;
+#ifdef ARC_SUPPORT                    
+				case 'I':
+					if (next_target.option_inches)
+            next_target.I = decfloat_to_int(&read_digit, 25400);
+					else
+            next_target.I = decfloat_to_int(&read_digit, 1000);
+					if (DEBUG_ECHO && (debug_flags & DEBUG_ECHO))
+            serwrite_int32(next_target.I);
+					break;
+				case 'J':
+					if (next_target.option_inches)
+            next_target.J = decfloat_to_int(&read_digit, 25400);
+					else
+            next_target.J = decfloat_to_int(&read_digit, 1000);
+					if (DEBUG_ECHO && (debug_flags & DEBUG_ECHO))
+            serwrite_int32(next_target.J);
+					break;
+				case 'R':
+					if (next_target.option_inches)
+            next_target.R = decfloat_to_int(&read_digit, 25400);
+					else
+            next_target.R = decfloat_to_int(&read_digit, 1000);
+					if (DEBUG_ECHO && (debug_flags & DEBUG_ECHO))
+            serwrite_int32(next_target.R);
+					break;
+ #endif                   
 				case 'E':
 					if (next_target.option_inches)
             next_target.target.axis[E] = decfloat_to_int(&read_digit, 25400);
@@ -210,6 +236,8 @@ uint8_t gcode_parse_char(uint8_t c) {
 					if ((next_target.M == 104) || (next_target.M == 109) || (next_target.M == 140))
 						next_target.S = decfloat_to_int(&read_digit, 4);
 					// if this is heater PID stuff, multiply by PID_SCALE because we divide by PID_SCALE later on
+					else if ((next_target.M >= 206))
+						next_target.S = decfloat_to_int(&read_digit, 1000);
 					else if ((next_target.M >= 130) && (next_target.M <= 132))
 						next_target.S = decfloat_to_int(&read_digit, PID_SCALE);
 					else
@@ -279,6 +307,17 @@ uint8_t gcode_parse_char(uint8_t c) {
           next_target.seen_G = 0;
           next_target.G = 0;
           break;
+#ifdef ARC_SUPPORT          
+        case 'I':
+          next_target.seen_I = 1;
+          break;
+        case 'J':
+          next_target.seen_J = 1;
+          break;
+        case 'R':
+          next_target.seen_R = 1;
+          break;
+#endif
         case 'X':
           next_target.seen_X = 1;
           break;
@@ -307,7 +346,7 @@ uint8_t gcode_parse_char(uint8_t c) {
           next_target.seen_N = 1;
           break;
         case '*':
-          next_target.seen_checksum = 1;
+          next_target.seen_checksum = 0;//1;
           break;
 
         // comments
@@ -403,6 +442,7 @@ uint8_t gcode_parse_char(uint8_t c) {
 		}
 
 		// reset variables
+        uint8_t ok=next_target.seen_G || next_target.seen_M || next_target.seen_T;
 		next_target.seen_X = next_target.seen_Y = next_target.seen_Z = \
 			next_target.seen_E = next_target.seen_F = next_target.seen_S = \
 			next_target.seen_P = next_target.seen_T = next_target.seen_N = \
@@ -410,6 +450,9 @@ uint8_t gcode_parse_char(uint8_t c) {
       next_target.seen_semi_comment = next_target.seen_parens_comment = \
       next_target.read_string = next_target.checksum_read = \
       next_target.checksum_calculated = 0;
+#ifdef ARC_SUPPORT 
+      next_target.seen_R = next_target.seen_I = next_target.seen_J = 0;
+#endif      
       last_field = 0;
       read_digit.sign = read_digit.mantissa = read_digit.exponent = 0;
 
@@ -419,7 +462,7 @@ uint8_t gcode_parse_char(uint8_t c) {
 		if (next_target.option_all_relative || next_target.option_e_relative) {
       next_target.target.axis[E] = 0;
 		}
-
+    if (ok) return 2; 
     return 1;
 	}
 

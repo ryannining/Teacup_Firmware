@@ -36,6 +36,11 @@ typedef struct {
 		uint8_t					seen_P	:1;
 		uint8_t					seen_T	:1;
 		uint8_t					seen_N	:1;
+#ifdef ARC_SUPPORT        
+		uint8_t					seen_I	:1;
+		uint8_t					seen_J	:1;
+		uint8_t					seen_R	:1;
+#endif        
 		uint8_t					seen_checksum				:1; ///< seen a checksum?
 		uint8_t					seen_semi_comment		:1; ///< seen a semicolon?
 		uint8_t					seen_parens_comment	:1; ///< seen an open parenthesis
@@ -54,7 +59,11 @@ typedef struct {
 	uint8_t						G;				///< G command number
 	uint8_t						M;				///< M command number
 	TARGET						target;		///< target position: X, Y, Z, E and F
-
+#ifdef ARC_SUPPORT
+    uint32_t  I;
+    uint32_t  J;
+    uint32_t  R;
+#endif
 	uint8_t						T;				///< T word (tool index)
 
 	uint8_t						checksum_read;				///< checksum in gcode command
@@ -85,5 +94,6 @@ uint8_t gcode_parse_char(uint8_t c);
 
 // uses the global variable next_target.N
 void request_resend(void);
+
 
 #endif	/* _GCODE_PARSE_H */

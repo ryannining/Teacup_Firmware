@@ -47,6 +47,7 @@
 #include "sd.h"
 #include "display.h"
 
+
 #ifdef SIMINFO
   #include "../simulavr/src/simulavr_info.h"
   SIMINFO_DEVICE(MCU_STR);
@@ -114,6 +115,7 @@ void init(void) {
 
   // prepare the power supply
   power_init();
+  recalc_acceleration(0);
 
   #ifdef DISPLAY
     display_init();
@@ -122,6 +124,8 @@ void init(void) {
 
 	// say hi to host
 	serial_writestr_P(PSTR("start\nok\n"));
+    power_off();
+    
 
 }
 
@@ -170,7 +174,8 @@ int main (void)
         line_done = gcode_parse_char(c);
         if (line_done) {
           gcode_active = 0;
-          ack_waiting = 1;
+          
+          ack_waiting = line_done-1;
         }
       }
 
