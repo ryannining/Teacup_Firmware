@@ -1,4 +1,18 @@
 ##############################################################################
+Small modification and tested on custom made 3d/cnc board with arduino 
+##############################################################################
+
+
+nano 328p. For GCODE sender, i use my own gcodesender (on github too)
+
+1. Repetier Style EEPROM configuration, M206 and M205, share same EEPROM address with Repetier, for example, to adjust Zmax, can use M206 P153 S100. Config on eeprom are: Maxfeedrate XYZE, Step/mmXYZE, Acceleration,Zmax, and RodLen,HorizontalRadius, TowerOffsetXYZ(DELTA PRINTER)
+2. Implement M109, to set heater 0 temperature and wait
+3. Implement ARC G2 and G3, configurable in configtool
+4. Implement Adjust Temp, (see EEPROM), basically just add /reduce temperature for M109, because who knows same gcode file request same 180degree, but on different printer, different filament loaded, need to add few degree, without editing the Gcode file/reslice.
+5. DELTA Printer , work in progress for nano 328p, of course need low number of line buffer (8 is ok). and maybe other fixes so can work with my gcode sender better.
+
+
+##############################################################################
 #                                                                            #
 # Teacup - lean and efficient firmware for RepRap printers                   #
 #                                                                            #

@@ -563,7 +563,7 @@ void dda_create(DDA *dda, const TARGET *target) {
       //sersendf_P(PSTR(",md:%lu,c:%lu"), move_duration, dda->c);
 
       dda->c_min = move_duration / dda->endpoint.F;
-      if (dda->c_min > c_limit) {
+      if (dda->c_min < c_limit) { // weird for delta, cause freeze/slow speed
         dda->c_min = c_limit;
         dda->endpoint.F = move_duration / dda->c_min;
       }
@@ -571,8 +571,8 @@ void dda_create(DDA *dda, const TARGET *target) {
       // Lookahead can deal with 16 bits ( = 1092 mm/s), only.
       if (dda->endpoint.F > 65535)
         dda->endpoint.F = 65535;
-      //if (dda->endpoint.F < 10000)
-      //  dda->endpoint.F = 10000;  
+      if (dda->endpoint.F < 10000)
+        dda->endpoint.F = 10000;  
       // Acceleration ramps are based on the fast axis, not the combined speed.
       dda->rampup_steps =
         acc_ramp_len(muldiv(dda->fast_um, dda->endpoint.F, distance),
@@ -1005,7 +1005,8 @@ void dda_clock() {
       #ifdef ACCELERATION_RAMPING
         // For always smooth operations, don't halt apruptly,
         // but start deceleration here.
-        ATOMIC_START
+        dda->live = 0;
+        /*ATOMIC_START
           move_state.endstop_stop = 1;
           if (move_state.step_no < dda->rampup_steps)  // still accelerating
             dda->total_steps = move_state.step_no * 2;
@@ -1017,6 +1018,7 @@ void dda_clock() {
         ATOMIC_END
         // Not atomic, because not used in dda_step().
         dda->rampup_steps = 0; // in case we're still accelerating
+        */
       #else
         dda->live = 0;
       #endif

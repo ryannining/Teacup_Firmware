@@ -55,7 +55,7 @@
 #define X_ENABLE_PIN             DIO10
 //#define X_INVERT_DIR
 //#define X_INVERT_MIN
-#define X_INVERT_MAX
+//#define X_INVERT_MAX
 #define X_INVERT_ENABLE
 
 #define Y_STEP_PIN               DIO6
@@ -65,7 +65,7 @@
 #define Y_ENABLE_PIN             DIO10
 //#define Y_INVERT_DIR
 //#define Y_INVERT_MIN
-#define Y_INVERT_MAX
+//#define Y_INVERT_MAX
 #define Y_INVERT_ENABLE
 
 #define Z_STEP_PIN               DIO8
@@ -75,7 +75,7 @@
 #define Z_ENABLE_PIN             AIO4
 //#define Z_INVERT_DIR
 //#define Z_INVERT_MIN
-#define Z_INVERT_MAX
+//#define Z_INVERT_MAX
 #define Z_INVERT_ENABLE
 
 #define E_STEP_PIN               AIO3
