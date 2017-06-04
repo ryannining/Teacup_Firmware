@@ -12,6 +12,8 @@ nano 328p. For GCODE sender, i use my own gcodesender (on github too)
 5. DELTA Printer , work in progress for nano 328p, of course need low number of line buffer (8 is ok). and maybe other fixes so can work with my gcode sender better.
 
 
+![Teacup3D PCB](https://raw.githubusercontent.com/ryannining/Teacup_Firmware/master/pcb/schematic.png)
+
 ##############################################################################
 #                                                                            #
 # Teacup - lean and efficient firmware for RepRap printers                   #
