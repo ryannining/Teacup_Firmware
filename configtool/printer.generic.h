@@ -38,6 +38,11 @@
 #define KINEMATICS_STRAIGHT
 #define KINEMATICS_COREXY
 #define KINEMATICS_DELTA
+/** \def DELTA_DISTANCE_SEGMENTS DELTA_TIME_SEGMENTS
+ */
+
+#define DELTASEGMENTS_DISTANCE
+#define DELTASEGMENTS_TIME
 
 /** \def DEFAULT_DELTA_DIAGONAL_ROD
   The length of your diagonal rod. To be precise, it's the distance 
@@ -46,7 +51,6 @@
     Unit is in micrometer.
 */
 #define DEFAULT_DELTA_DIAGONAL_ROD 210000
-#define DELTA_DISTANCE_SEGMENTS
 #define DELTA_SEGMENTS_PER_SECOND 200
 #define DELTA_SEGMENT_UM 500 
 

@@ -129,15 +129,15 @@ int32_t EEMEM EE_delta_radius;
 
 
 void reload_acceleration_eeprom(void){
-    _STEPS_PER_M[X]=eeprom_read_dword(&EE_stepx);
-    _STEPS_PER_M[Y]=eeprom_read_dword(&EE_stepy);
-    _STEPS_PER_M[Z]=eeprom_read_dword(&EE_stepz);
-    _STEPS_PER_M[E]=eeprom_read_dword(&EE_stepe);
+    _STEPS_PER_M[X]=(uint32_t)eeprom_read_dword(&EE_stepx);
+    _STEPS_PER_M[Y]=(uint32_t)eeprom_read_dword(&EE_stepy);
+    _STEPS_PER_M[Z]=(uint32_t)eeprom_read_dword(&EE_stepz);
+    _STEPS_PER_M[E]=(uint32_t)eeprom_read_dword(&EE_stepe);
     
-    maximum_feedrate_P[X]=eeprom_read_dword(&EE_mfx);
-    maximum_feedrate_P[Y]=eeprom_read_dword(&EE_mfy);
-    maximum_feedrate_P[Z]=eeprom_read_dword(&EE_mfz);
-    maximum_feedrate_P[E]=eeprom_read_dword(&EE_mfe);
+    maximum_feedrate_P[X]=(uint32_t)eeprom_read_dword(&EE_mfx);
+    maximum_feedrate_P[Y]=(uint32_t)eeprom_read_dword(&EE_mfy);
+    maximum_feedrate_P[Z]=(uint32_t)eeprom_read_dword(&EE_mfz);
+    maximum_feedrate_P[E]=(uint32_t)eeprom_read_dword(&EE_mfe);
     
     _ACCELERATION=eeprom_read_dword(&EE_accel)/1000;    
     #ifdef DELTA_PRINTER
@@ -297,7 +297,7 @@ void dda_new_startpoint(void) {
 void dda_create(DDA *dda, const TARGET *target) {
   axes_uint32_t delta_um;
   axes_int32_t steps;
-	uint32_t	distance, c_limit, c_limit_calc;
+	uint32_t	distance, c_limit;
   enum axis_e i;
   #ifdef ACCELERATION_RAMPING
   // Number the moves to identify them; allowed to overflow.
@@ -319,8 +319,8 @@ void dda_create(DDA *dda, const TARGET *target) {
                dda->endpoint.axis[Z], dda->endpoint.axis[E],dda->endpoint.F);
 
   // Apply feedrate multiplier.
-  /*
-  if (dda->endpoint.f_multiplier != 256 && ! dda->endstop_check) {
+  
+  /*if (dda->endpoint.f_multiplier != 256 && ! dda->endstop_check) {
     dda->endpoint.F *= dda->endpoint.f_multiplier;
     dda->endpoint.F += 128;
     dda->endpoint.F /= 256;
@@ -367,6 +367,7 @@ void dda_create(DDA *dda, const TARGET *target) {
     steps[E] += 128;
     steps[E] /= 256;
   }*/
+  
 
   if ( ! target->e_relative) {
     int32_t delta_steps;
@@ -497,8 +498,9 @@ void dda_create(DDA *dda, const TARGET *target) {
     //       ACCELERATION_TEMPORAL above. This should make re-calculating the
     //       allowed F easier.
     c_limit = 0;
+    float c_limit_calc;
     for (i = X; i < AXIS_COUNT; i++) {
-      c_limit_calc = (delta_um[i] * 2400L) /
+      c_limit_calc = ((int32_t)delta_um[i] * 2400.0) /
                      dda->total_steps * (F_CPU / 40000) /
                      maximum_feedrate_P[i];
       if (c_limit_calc > c_limit)
@@ -571,8 +573,8 @@ void dda_create(DDA *dda, const TARGET *target) {
       // Lookahead can deal with 16 bits ( = 1092 mm/s), only.
       if (dda->endpoint.F > 65535)
         dda->endpoint.F = 65535;
-      if (dda->endpoint.F < 10000)
-        dda->endpoint.F = 10000;  
+      //if (dda->endpoint.F < 5000)
+       // dda->endpoint.F = 5000;  
       // Acceleration ramps are based on the fast axis, not the combined speed.
       dda->rampup_steps =
         acc_ramp_len(muldiv(dda->fast_um, dda->endpoint.F, distance),

@@ -89,14 +89,18 @@ void home() {
 #ifdef DELTA_PRINTER
 void home_delta() {
    //See M666 for Delta Geometry settings
-   TARGET t = startpoint;
    delta_height = eeprom_read_dword ((uint32_t *) &EE_real_zmax);
+   queue_wait();
 
    bypass_delta = 1;   //Turn off delta calculations
-
+   startpoint.axis[X] = next_target.target.axis[X] =
+   startpoint.axis[Y] = next_target.target.axis[Y] =
+   startpoint.axis[Z] = next_target.target.axis[Z] =
+   startpoint.axis[E] = next_target.target.axis[E] = 0; 
+   
    dda_new_startpoint();
-   queue_wait();
    sersendf_P(PSTR("Homing...\n"));
+   TARGET t = startpoint;
 
    //move all axis at the same time until an endstop is hit
    t.axis[X] = delta_height;

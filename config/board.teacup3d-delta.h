@@ -182,12 +182,10 @@
 //DEFINE_TEMP_SENSORS_START
 //                 name      type           pin    additional
 DEFINE_TEMP_SENSOR(extruder, TT_THERMISTOR, AIO6,  THERMISTOR_EXTRUDER)
-DEFINE_TEMP_SENSOR(fan,      TT_THERMISTOR, AIO7,  THERMISTOR_FAN)
 
 // Beta algorithm      r0      beta  r2    vadc
 // Steinhart-Hart      rp      t0    r0      t1    r1      t2    r2
 //TEMP_TABLE EXTRUDER (100000, 4092, 4700, 5.0)
-//TEMP_TABLE FAN      (100000, 4092, 4700, 5.0)
 //DEFINE_TEMP_SENSORS_END
 
 
@@ -243,7 +241,7 @@ DEFINE_TEMP_SENSOR(fan,      TT_THERMISTOR, AIO7,  THERMISTOR_FAN)
 //DEFINE_HEATERS_START
 //            name      pin      invert  pwm
 DEFINE_HEATER(extruder, DIO3,    0,      1)
-DEFINE_HEATER(fan,      DIO5,    0,      1)
+DEFINE_HEATER(fan,      DIO5,    0,      0)
 
 #define HEATER_EXTRUDER HEATER_extruder
 #define HEATER_FAN HEATER_fan

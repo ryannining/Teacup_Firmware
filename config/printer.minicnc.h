@@ -5,6 +5,13 @@
 *                                                                           *
 \***************************************************************************/
 
+/** \def ARC_SUPPORT
+
+  For G2 and G3, inkscape gcode contain lots of this. Usually slicer 3D never use this feature, save memory
+*/
+
+//#define ARC_SUPPORT
+
 /** \def KINEMATICS_STRAIGHT KINEMATICS_COREXY
 
   This defines the type of kinematics your printer uses. That's essential!
@@ -20,7 +27,13 @@
     A bot using CoreXY kinematics. Typical for CoreXY
     are long and crossing toothed belts and a print head
     moving on the X-Y-plane.
-*/
+
+   KINEMATICS_DELTA
+    A bot using CoreXY kinematics. Typical for CoreXY
+    are long and crossing toothed belts and a print head
+    moving on the X-Y-plane.
+
+ */
 
 #define KINEMATICS_STRAIGHT
 //#define KINEMATICS_COREXY
@@ -33,6 +46,7 @@
     Unit is in micrometer.
 */
 #define DEFAULT_DELTA_DIAGONAL_ROD 210000
+#define DELTA_DISTANCE_SEGMENTS
 #define DELTA_SEGMENTS_PER_SECOND 150
 #define DELTA_SEGMENT_UM         3000
 
@@ -66,26 +80,26 @@
 
     Valid range: 20 to 4'0960'000 (0.02 to 40960 steps/mm)
 */
-#define STEPS_PER_M_X            500000
-#define STEPS_PER_M_Y            500000
-#define STEPS_PER_M_Z            100000
+#define STEPS_PER_M_X            133333
+#define STEPS_PER_M_Y            133333
+#define STEPS_PER_M_Z            125000
 #define STEPS_PER_M_E            250000
 
 /** \def MAXIMUM_FEEDRATE_X MAXIMUM_FEEDRATE_Y MAXIMUM_FEEDRATE_Z MAXIMUM_FEEDRATE_E
   Used for G0 rapid moves and as a cap for all other feedrates.
 */
-#define MAXIMUM_FEEDRATE_X       600
-#define MAXIMUM_FEEDRATE_Y       600
-#define MAXIMUM_FEEDRATE_Z       600
+#define MAXIMUM_FEEDRATE_X       2000
+#define MAXIMUM_FEEDRATE_Y       2000
+#define MAXIMUM_FEEDRATE_Z       100
 #define MAXIMUM_FEEDRATE_E       1200
 
 /** \def SEARCH_FEEDRATE_X SEARCH_FEEDRATE_Y SEARCH_FEEDRATE_Z
   Used when doing precision endstop search and as default feedrate. No
   SEARCH_FEEDRATE_E, as E can't be searched.
 */
-#define SEARCH_FEEDRATE_X        3600
-#define SEARCH_FEEDRATE_Y        3600
-#define SEARCH_FEEDRATE_Z        3600
+#define SEARCH_FEEDRATE_X        600
+#define SEARCH_FEEDRATE_Y        600
+#define SEARCH_FEEDRATE_Z        600
 
 /** \def ENDSTOP_CLEARANCE_X ENDSTOP_CLEARANCE_Y ENDSTOP_CLEARANCE_Z
 
@@ -161,7 +175,7 @@
     Units: mm/s^2
     Useful range: 1 to 10'000
 */
-#define ACCELERATION             1000
+#define ACCELERATION             100
 
 /** \def LOOKAHEAD
   Define this to enable look-ahead during *ramping* acceleration to smoothly
@@ -192,9 +206,9 @@
     Sane values: 0 to 400
     Valid range: 0 to 65535
 */
-#define MAX_JERK_X               1200
-#define MAX_JERK_Y               1200
-#define MAX_JERK_Z               1200
+#define MAX_JERK_X               2400
+#define MAX_JERK_Y               2400
+#define MAX_JERK_Z               2400
 #define MAX_JERK_E               1200
 
 
