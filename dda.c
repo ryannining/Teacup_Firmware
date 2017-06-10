@@ -24,6 +24,7 @@
 #include	"sersendf.h"
 #include	"pinio.h"
 #include "memory_barrier.h"
+#include "heater.h"
 //#include "graycode.c"
 
 #ifdef	DC_EXTRUDER
@@ -118,6 +119,10 @@ int32_t EEMEM EE_mfx;
 int32_t EEMEM EE_mfy;
 int32_t EEMEM EE_mfz;
 int32_t EEMEM EE_mfe;
+
+int32_t EEMEM EE_jerkx;
+int32_t EEMEM EE_jerkz;
+
 int32_t EEMEM EE_accel;
 #ifdef DELTA_PRINTER
 int32_t EEMEM EE_x_endstop_adj;
@@ -126,7 +131,6 @@ int32_t EEMEM EE_z_endstop_adj;
 int32_t EEMEM EE_delta_diagonal_rod;
 int32_t EEMEM EE_delta_radius;
 #endif
-
 
 void reload_acceleration_eeprom(void){
     _STEPS_PER_M[X]=(uint32_t)eeprom_read_dword(&EE_stepx);
@@ -139,13 +143,17 @@ void reload_acceleration_eeprom(void){
     maximum_feedrate_P[Z]=(uint32_t)eeprom_read_dword(&EE_mfz);
     maximum_feedrate_P[E]=(uint32_t)eeprom_read_dword(&EE_mfe);
     
+    maximum_jerk_P[X]=maximum_jerk_P[Y]=(uint32_t)eeprom_read_dword(&EE_jerkx);
+    maximum_jerk_P[Z]=(uint32_t)eeprom_read_dword(&EE_jerkz);
+    
     _ACCELERATION=eeprom_read_dword(&EE_accel)/1000;    
     #ifdef DELTA_PRINTER
+     _DELTA_SEGMENTS   = (uint32_t)(eeprom_read_dword(&EE_deltasegment));
      delta_diagonal_rod   = (uint32_t)(eeprom_read_dword(&EE_delta_diagonal_rod) >> 4);
      DELTA_DIAGONAL_ROD_2 = delta_diagonal_rod*delta_diagonal_rod;
      delta_radius         = (uint32_t)(eeprom_read_dword(&EE_delta_radius));
 
-     delta_tower1_x       = (int32_t)(COS(DegToRad(TOWER_X_ANGLE_DEG)) * delta_radius) >> 4;
+      delta_tower1_x       = (int32_t)(COS(DegToRad(TOWER_X_ANGLE_DEG)) * delta_radius) >> 4;
       delta_tower1_y       = (int32_t)(SIN(DegToRad(TOWER_X_ANGLE_DEG)) * delta_radius) >> 4;
       delta_tower2_x       = (int32_t)(COS(DegToRad(TOWER_Y_ANGLE_DEG)) * delta_radius) >> 4;
       delta_tower2_y       = (int32_t)(SIN(DegToRad(TOWER_Y_ANGLE_DEG)) * delta_radius) >> 4;
@@ -185,6 +193,35 @@ void recalc_acceleration(uint8_t readeeprom){
 
 }
 
+void reset_eeprom(void){
+    
+    eeprom_write_dword((uint32_t *) &EE_real_zmax, Z_MAX*1000);
+    eeprom_write_dword((uint32_t *) &EE_adjust_temp,0 );
+    eeprom_write_dword((uint32_t *) &EE_stepe, STEPS_PER_M_E );
+    eeprom_write_dword((uint32_t *) &EE_stepx, STEPS_PER_M_X);
+    eeprom_write_dword((uint32_t *) &EE_stepy,STEPS_PER_M_Y);
+    eeprom_write_dword((uint32_t *) &EE_stepz,STEPS_PER_M_Z);
+    eeprom_write_dword((uint32_t *) &EE_mfx,MAXIMUM_FEEDRATE_X);
+    eeprom_write_dword((uint32_t *) &EE_mfy,MAXIMUM_FEEDRATE_Y);
+    eeprom_write_dword((uint32_t *) &EE_mfz,MAXIMUM_FEEDRATE_Z);
+    eeprom_write_dword((uint32_t *) &EE_mfe,MAXIMUM_FEEDRATE_E);
+    eeprom_write_dword((uint32_t *) &EE_jerkx,MAX_JERK_X);
+    eeprom_write_dword((uint32_t *) &EE_jerkz,MAX_JERK_Z);
+    eeprom_write_dword((uint32_t *) &EE_accel,ACCELERATION*1000);
+    #ifdef DELTA_PRINTER
+    eeprom_write_dword((uint32_t *) &EE_x_endstop_adj,0);
+    eeprom_write_dword((uint32_t *) &EE_y_endstop_adj,0);
+    eeprom_write_dword((uint32_t *) &EE_z_endstop_adj,0);
+    eeprom_write_dword((uint32_t *) &EE_delta_diagonal_rod,DEFAULT_DELTA_DIAGONAL_ROD);
+    eeprom_write_dword((uint32_t *) &EE_delta_radius,DEFAULT_DELTA_RADIUS);
+    #ifdef DELTASEGMENTS_TIME
+    eeprom_write_dword((uint32_t *) &EE_deltasegment,DELTA_SEGMENTS_PER_SECOND*1000);
+    #else
+    eeprom_write_dword((uint32_t *) &EE_deltasegment,DELTA_SEGMENTS_UM);
+    #endif
+    #endif
+    recalc_acceleration(1);
+}
 
 /*! Set the direction of the 'n' axis
 */
@@ -390,8 +427,7 @@ void dda_create(DDA *dda, const TARGET *target) {
       //       just signedness and storage location. Ideally, dda is used
       //       as storage place only if neccessary (LOOKAHEAD turned on?)
       //       because this space is multiplied by the movement queue size.
-      dda->delta_um[E] = (delta_steps >= 0) ?
-                         (int32_t)delta_um[E] : -(int32_t)delta_um[E];
+      // dda->delta_um[E] = (delta_steps >= 0) ?(int32_t)delta_um[E] : -(int32_t)delta_um[E];
     #endif
   }
   else {
@@ -571,10 +607,8 @@ void dda_create(DDA *dda, const TARGET *target) {
       }
 
       // Lookahead can deal with 16 bits ( = 1092 mm/s), only.
-      if (dda->endpoint.F > 65535)
-        dda->endpoint.F = 65535;
-      //if (dda->endpoint.F < 5000)
-       // dda->endpoint.F = 5000;  
+      if (dda->endpoint.F > 65535) dda->endpoint.F = 65535;
+      //if (dda->endpoint.F < 2000) dda->endpoint.F = 2000;  
       // Acceleration ramps are based on the fast axis, not the combined speed.
       dda->rampup_steps =
         acc_ramp_len(muldiv(dda->fast_um, dda->endpoint.F, distance),
@@ -583,6 +617,7 @@ void dda_create(DDA *dda, const TARGET *target) {
       if (dda->rampup_steps > dda->total_steps / 2)
         dda->rampup_steps = dda->total_steps / 2;
       dda->rampdown_steps = dda->total_steps - dda->rampup_steps;
+      dda->rampdown_steps = 0;
       
        //sersendf_P(PSTR("md:%lu,F%lq,clim,%lu cmin:%lu,c:%lu\n"), move_duration, dda->endpoint.F,c_limit,dda->c_min, dda->c);  
       #ifdef LOOKAHEAD
@@ -804,6 +839,7 @@ void dda_step(DDA *dda) {
       short-delays consecutively and to give sufficient time on average.
     */
     // This is the time which led to this call of dda_step().
+    
     move_state.last_time = move_state.time[dda->axis_to_step] +
                            dda->step_interval[dda->axis_to_step];
 

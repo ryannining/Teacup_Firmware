@@ -46,6 +46,7 @@
 #include "spi.h"
 #include "sd.h"
 #include "display.h"
+#include "sersendf.h"
 
 
 #ifdef SIMINFO
@@ -125,6 +126,7 @@ void init(void) {
 	// say hi to host
 	serial_writestr_P(PSTR("start\nok\n"));
     power_off();
+    heater_set(HEATER_FAN, 128);
     
 
 }
@@ -145,6 +147,7 @@ int main (void)
 	init();
 
 	// main loop
+    unsigned long gtime=0;
 	for (;;)
 	{
 		// if queue is full, no point in reading chars- host will just have to wait
@@ -163,6 +166,12 @@ int main (void)
         incoming every about 1250 CPU clocks on AVR 16 MHz.
       */
       if (ack_waiting) {
+        /*if (gtime>0) {
+            gtime=milllis()-gtime;
+            sersendf_P(PSTR("%ld\n"),gtime);
+        }
+        gtime=milllis();
+        */
         serial_writestr_P(PSTR("ok\n"));
         ack_waiting = 0;
       }

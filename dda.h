@@ -14,6 +14,7 @@
 
 
 void recalc_acceleration(uint8_t readeeprom);
+void reset_eeprom(void);
 extern int32_t EEMEM EE_stepx;
 extern int32_t EEMEM EE_stepy;
 extern int32_t EEMEM EE_stepz;
@@ -22,7 +23,12 @@ extern int32_t EEMEM EE_mfx;
 extern int32_t EEMEM EE_mfy;
 extern int32_t EEMEM EE_mfz;
 extern int32_t EEMEM EE_mfe;
+extern int32_t EEMEM EE_jerkx;
+extern int32_t EEMEM EE_jerkz;
+
 extern int32_t EEMEM EE_accel;
+//extern int32_t _ACCELERATION;
+//extern axes_uint32_t _STEPS_PER_M;
 
 #ifdef DELTA_PRINTER
 extern int32_t EEMEM EE_x_endstop_adj;

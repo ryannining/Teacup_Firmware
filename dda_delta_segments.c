@@ -19,6 +19,14 @@
 #include "dda_maths.h"
 #include "dda.h"
 #include "debug.h"
+#include	<avr/eeprom.h>
+
+int32_t EEMEM EE_deltasegment;
+#ifdef DELTASEGMENTS_TIME
+uint32_t _DELTA_SEGMENTS=DELTA_SEGMENTS_PER_SECOND*1000;
+#else
+uint32_t _DELTA_SEGMENTS=DELTA_SEGMENTS_UM;
+#endif
 
 //#define debug2a
 void delta_segments_create(TARGET *target) {
@@ -39,7 +47,7 @@ void delta_segments_create(TARGET *target) {
 
    orig_startpoint = startpoint;
 
-   seg_size = DELTA_SEGMENT_UM;
+   seg_size = _DELTA_SEGMENTS;
 
    for (i = X; i < AXIS_COUNT; i++){
       diff.axis[i] = target->axis[i] - orig_startpoint.axis[i];
@@ -60,7 +68,7 @@ void delta_segments_create(TARGET *target) {
   cartesian_move_sec = (dist / target->F) * 60 * 0.001;   //distance(um) * 1mm/1000um * (Feedrate)1min/mm * 60sec/min
 
   if (target->F > 0)
-    segment_total = DELTA_SEGMENTS_PER_SECOND * cartesian_move_sec;   //distance(um) * 1mm/1000um * (Feedrate)1min/mm * 60sec/min
+    segment_total = _DELTA_SEGMENTS * cartesian_move_sec/1000;   //distance(um) * 1mm/1000um * (Feedrate)1min/mm * 60sec/min
   else
     segment_total = 0;
 #endif /* DELTASEGMENTS_TIME */
@@ -91,7 +99,7 @@ void delta_segments_create(TARGET *target) {
 
     #endif
 #endif
-
+    //sersendf_P(PSTR("1seg\n"));
     //segment = *target;
     enqueue_home(target,0,0);
   } else {

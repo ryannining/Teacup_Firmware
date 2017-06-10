@@ -32,7 +32,7 @@ enum gcode_source gcode_active = 0;
 
 /// current or previous gcode word
 /// for working out what to do with data just received
-uint8_t last_field = 0;
+uint16_t last_field = 0;
 
 /// crude crc macro
 #define crc(a, b)		(a ^ b)
@@ -97,10 +97,48 @@ static int32_t decfloat_to_int(decfloat *df, uint16_t multiplicand) {
 	}
 
 	r *= multiplicand;
-	if (e)
-		r = (r + powers[e] / 2) / powers[e];
+	if (e) r = (r + powers[e] / 2) / powers[e];
 
 	return df->sign ? -(int32_t)r : (int32_t)r;
+}
+static int32_t decfloat_to_int1000(void) {
+	uint32_t	r = read_digit.mantissa;
+	uint8_t	e = read_digit.exponent;
+
+	// e=1 means we've seen a decimal point but no digits after it, and e=2 means we've seen a decimal point with one digit so it's too high by one if not zero
+    if (e) {
+        e--;
+        switch(e) {
+            case 0:r *=1000;break;
+            case 1:r *=100;break;
+            case 2:r *=10;break;
+            case 4:r /=10;break;
+            
+        }
+    } else r *=1000;
+
+	//if (e) r = (r + powers[e] / 2) / powers[e];
+
+	return read_digit.sign ? -(int32_t)r : (int32_t)r;
+}
+static int32_t decfloat_to_int1(void) {
+	uint32_t	r = read_digit.mantissa;
+	uint8_t	e = read_digit.exponent;
+
+	// e=1 means we've seen a decimal point but no digits after it, and e=2 means we've seen a decimal point with one digit so it's too high by one if not zero
+    if (e) {
+        e--;
+        switch(e) {
+            case 1:r /=10;break;
+            case 2:r /=100;break;
+            case 3:r /=1000;break;
+            
+        }
+    }
+
+	//if (e) r = (r + powers[e] / 2) / powers[e];
+
+	return read_digit.sign ? -(int32_t)r : (int32_t)r;
 }
 
 void gcode_init(void) {
@@ -163,69 +201,85 @@ uint8_t gcode_parse_char(uint8_t c) {
 						serwrite_uint8(next_target.M);
 					break;
 				case 'X':
+                    #ifdef INCH_SUPPORT
 					if (next_target.option_inches)
             next_target.target.axis[X] = decfloat_to_int(&read_digit, 25400);
-					else
-            next_target.target.axis[X] = decfloat_to_int(&read_digit, 1000);
+					else 
+                    #endif
+            next_target.target.axis[X] = decfloat_to_int1000();
 					if (DEBUG_ECHO && (debug_flags & DEBUG_ECHO))
             serwrite_int32(next_target.target.axis[X]);
 					break;
 				case 'Y':
+					#ifdef INCH_SUPPORT
 					if (next_target.option_inches)
             next_target.target.axis[Y] = decfloat_to_int(&read_digit, 25400);
 					else
-            next_target.target.axis[Y] = decfloat_to_int(&read_digit, 1000);
+                        #endif
+            next_target.target.axis[Y] = decfloat_to_int1000();
 					if (DEBUG_ECHO && (debug_flags & DEBUG_ECHO))
             serwrite_int32(next_target.target.axis[Y]);
 					break;
 				case 'Z':
+					#ifdef INCH_SUPPORT
 					if (next_target.option_inches)
             next_target.target.axis[Z] = decfloat_to_int(&read_digit, 25400);
 					else
-            next_target.target.axis[Z] = decfloat_to_int(&read_digit, 1000);
+                    #endif
+            next_target.target.axis[Z] = decfloat_to_int1000();
 					if (DEBUG_ECHO && (debug_flags & DEBUG_ECHO))
             serwrite_int32(next_target.target.axis[Z]);
 					break;
 #ifdef ARC_SUPPORT                    
 				case 'I':
+					#ifdef INCH_SUPPORT
 					if (next_target.option_inches)
             next_target.I = decfloat_to_int(&read_digit, 25400);
 					else
-            next_target.I = decfloat_to_int(&read_digit, 1000);
+                        #endif
+            next_target.I = decfloat_to_int1000();
 					if (DEBUG_ECHO && (debug_flags & DEBUG_ECHO))
             serwrite_int32(next_target.I);
 					break;
 				case 'J':
+					#ifdef INCH_SUPPORT
 					if (next_target.option_inches)
             next_target.J = decfloat_to_int(&read_digit, 25400);
 					else
-            next_target.J = decfloat_to_int(&read_digit, 1000);
+                        #endif
+            next_target.J = decfloat_to_int1000();
 					if (DEBUG_ECHO && (debug_flags & DEBUG_ECHO))
             serwrite_int32(next_target.J);
 					break;
 				case 'R':
+					#ifdef INCH_SUPPORT
 					if (next_target.option_inches)
             next_target.R = decfloat_to_int(&read_digit, 25400);
-					else
-            next_target.R = decfloat_to_int(&read_digit, 1000);
+					else 
+                        #endif
+            next_target.R = decfloat_to_int1000();
 					if (DEBUG_ECHO && (debug_flags & DEBUG_ECHO))
             serwrite_int32(next_target.R);
 					break;
  #endif                   
 				case 'E':
+					#ifdef INCH_SUPPORT
 					if (next_target.option_inches)
-            next_target.target.axis[E] = decfloat_to_int(&read_digit, 25400);
+                        next_target.target.axis[E] = decfloat_to_int(&read_digit, 25400);
 					else
-            next_target.target.axis[E] = decfloat_to_int(&read_digit, 1000);
+                        #endif
+                        next_target.target.axis[E] = decfloat_to_int1000();
 					if (DEBUG_ECHO && (debug_flags & DEBUG_ECHO))
-            serwrite_int32(next_target.target.axis[E]);
+                        serwrite_int32(next_target.target.axis[E]);
 					break;
 				case 'F':
 					// just use raw integer, we need move distance and n_steps to convert it to a useful value, so wait until we have those to convert it
+					#ifdef INCH_SUPPORT
 					if (next_target.option_inches)
 						next_target.target.F = decfloat_to_int(&read_digit, 25400);
-					else
-						next_target.target.F = decfloat_to_int(&read_digit, 1);
+					else 
+                        #endif
+						next_target.target.F = decfloat_to_int1();
 					if (DEBUG_ECHO && (debug_flags & DEBUG_ECHO))
 						serwrite_uint32(next_target.target.F);
 					break;
@@ -237,7 +291,7 @@ uint8_t gcode_parse_char(uint8_t c) {
 						next_target.S = decfloat_to_int(&read_digit, 4);
 					// if this is heater PID stuff, multiply by PID_SCALE because we divide by PID_SCALE later on
 					else if ((next_target.M >= 206))
-						next_target.S = decfloat_to_int(&read_digit, 1000);
+						next_target.S = decfloat_to_int1000();
 					else if ((next_target.M >= 130) && (next_target.M <= 132))
 						next_target.S = decfloat_to_int(&read_digit, PID_SCALE);
 					else
@@ -281,9 +335,14 @@ uint8_t gcode_parse_char(uint8_t c) {
     // Do it early, as there are many more digits than characters expected.
     if (c >= '0' && c <= '9') {
       if (read_digit.exponent < DECFLOAT_EXP_MAX + 1 &&
-          ((next_target.option_inches == 0 &&
-          read_digit.mantissa < DECFLOAT_MANT_MM_MAX) ||
-          (next_target.option_inches &&
+          ((
+          #ifdef INCH_SUPPORT
+          next_target.option_inches == 0 &&
+          #endif
+          read_digit.mantissa < DECFLOAT_MANT_MM_MAX) || (
+          #ifdef INCH_SUPPORT
+          next_target.option_inches &&
+          #endif
           read_digit.mantissa < DECFLOAT_MANT_IN_MAX))) {
         // this is simply mantissa = (mantissa * 10) + atoi(c) in different clothes
         read_digit.mantissa = (read_digit.mantissa << 3) +

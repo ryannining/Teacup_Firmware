@@ -12,6 +12,13 @@
 
 #define ARC_SUPPORT
 
+/** \def INCH_SUPPORT
+
+  Might reduce code a little bit
+*/
+
+#define INCH_SUPPORT
+
 /** \def KINEMATICS_STRAIGHT KINEMATICS_COREXY
 
   This defines the type of kinematics your printer uses. That's essential!

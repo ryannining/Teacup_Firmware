@@ -23,6 +23,7 @@ class MiscellaneousPage(wx.Panel, Page):
                    'DC_EXTRUDER': "Heater:", 'DC_EXTRUDER_PWM': "PWM:",
                    'USE_WATCHDOG': "Use the Watchdog Timer",
                    'ARC_SUPPORT': "Enable ARC Gcode G2 G3",
+                   'INCH_SUPPORT': "Enable INCH coordinate",
                    'TH_COUNT': "Temperature History Size:",
                    'FAST_PWM': "Fast PWM",
                    'ENDSTOP_STEPS': "Endstop Steps:",
@@ -83,6 +84,10 @@ class MiscellaneousPage(wx.Panel, Page):
     k = 'ARC_SUPPORT'
     cb = self.addCheckBox(k, self.onCheckBox)
     sz.Add(cb, pos = (8, 1))
+
+    k = 'INCH_SUPPORT'
+    cb = self.addCheckBox(k, self.onCheckBox)
+    sz.Add(cb, pos = (9, 1))
 
     b = wx.StaticBox(self, wx.ID_ANY, "BANG BANG Bed Control")
     b.SetFont(font)

@@ -62,7 +62,9 @@ const uint8_t msbloc (uint32_t v);
 uint32_t acc_ramp_len(uint32_t feedrate, uint8_t fast_axis);
 // For X axis only, should become obsolete:
 #define ACCELERATE_RAMP_LEN(speed) (((speed)*(speed)) / (uint32_t)((7200000.0f * ACCELERATION) / (float)STEPS_PER_M_X))
-
+//uint32_t ACCELERATE_RAMP_LEN(uint32_t speed){
+// return (((speed)*(speed)) / (uint32_t)((7200000.0f * _ACCELERATION) / (float)_STEPS_PER_M_X))
+//}
 // Compile-time trigonometric functions. See Taylor series.
 // Converts degrees to radians.
 #define DegToRad(angleDegrees) ((angleDegrees) * M_PI / 180.0)

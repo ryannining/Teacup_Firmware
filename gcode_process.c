@@ -113,12 +113,12 @@ void process_gcode_command() {
 				//?
         temp_wait();
                 if (!next_target.seen_F) {
-				backup_f = next_target.target.F;
-				next_target.target.F = maximum_feedrate_P[X] * 2L;
+				//backup_f = next_target.target.F;
+				//next_target.target.F = maximum_feedrate_P[X] * 2L;
                 //next_target.target.axis[E]=0;
-                
+                if (next_target.target.F>maximum_feedrate_P[X]) next_target.target.F=maximum_feedrate_P[X];
 				enqueue(&next_target.target);
-				next_target.target.F = backup_f;
+				//next_target.target.F = backup_f;
 				} else enqueue(&next_target.target);
                 break;
 
@@ -131,6 +131,7 @@ void process_gcode_command() {
 				//?
         temp_wait();
                 //next_target.target.axis[E]=0;
+				if (next_target.target.F>maximum_feedrate_P[X]) next_target.target.F=maximum_feedrate_P[X];
 				enqueue(&next_target.target);
 				break;
 
@@ -168,7 +169,8 @@ void process_gcode_command() {
 					}
 				}
 				break;
-            
+            #ifdef INCH_SUPPORT
+					
 			case 20:
 				//? --- G20: Set Units to Inches ---
 				//?
@@ -188,7 +190,7 @@ void process_gcode_command() {
 				//?
 				next_target.option_inches = 0;
 				break;
-
+            #endif
 			case 28:
 				//? --- G28: Home ---
 				//?
@@ -555,7 +557,7 @@ void process_gcode_command() {
 
 			case 7:
             case 107:
-                heater_set(HEATER_FAN, 0);
+                heater_set(HEATER_FAN, 128);
 			case 106:
 				//? --- M106: Set Fan Speed / Set Device Power ---
 				//?
@@ -837,6 +839,9 @@ void process_gcode_command() {
 				//? Undocumented.
 				heater_save_settings();
 				break;
+            case 502:
+                
+                 reset_eeprom();
              case 205:
                 sersendf_P(PSTR("EPR:4 153 %lq Zmax\n"),eeprom_read_dword((uint32_t *) &EE_real_zmax));
                 sersendf_P(PSTR("EPR:4 1048 %d ADJTmp\n"),eeprom_read_dword((uint32_t *) &EE_adjust_temp));
@@ -849,13 +854,18 @@ void process_gcode_command() {
                 sersendf_P(PSTR("EPR:4 19 %lu MFY\n"),eeprom_read_dword((uint32_t *) &EE_mfy));
                 sersendf_P(PSTR("EPR:4 23 %lu MFZ\n"),eeprom_read_dword((uint32_t *) &EE_mfz));
                 sersendf_P(PSTR("EPR:4 27 %lu MFE\n"),eeprom_read_dword((uint32_t *) &EE_mfe));
+                sersendf_P(PSTR("EPR:4 15 %lu MFX\n"),eeprom_read_dword((uint32_t *) &EE_mfx));
                 
+                sersendf_P(PSTR("EPR:4 15 %lu XYJerk\n"),eeprom_read_dword((uint32_t *) &EE_jerkx));
+                sersendf_P(PSTR("EPR:4 15 %lu Zjerk\n"),eeprom_read_dword((uint32_t *) &EE_jerkz));
+
                 #ifdef DELTA_PRINTER
                 sersendf_P(PSTR("EPR:4 133 %lq OfX\n"),eeprom_read_dword((uint32_t *) &EE_x_endstop_adj));
                 sersendf_P(PSTR("EPR:4 137 %lq OfY\n"),eeprom_read_dword((uint32_t *) &EE_y_endstop_adj));
                 sersendf_P(PSTR("EPR:4 141 %lq OfZ\n"),eeprom_read_dword((uint32_t *) &EE_z_endstop_adj));
                 sersendf_P(PSTR("EPR:4 881 %lq RodLen\n"),eeprom_read_dword((uint32_t *) &EE_delta_diagonal_rod));
                 sersendf_P(PSTR("EPR:4 885 %lq HorRad\n"),eeprom_read_dword((uint32_t *) &EE_delta_radius));
+                sersendf_P(PSTR("EPR:4 889 %lq Segment\n"),eeprom_read_dword((uint32_t *) &EE_deltasegment));
                 #endif
                 
                 sersendf_P(PSTR("EPR:4 51 %lq Accel\n"),eeprom_read_dword((uint32_t *) &EE_accel));
@@ -902,6 +912,12 @@ void process_gcode_command() {
                     case 27:
                         eeprom_write_dword((uint32_t *) &EE_mfe,next_target.S/1000);
                         break;    
+                    case 39:
+                        eeprom_write_dword((uint32_t *) &EE_jerkx,next_target.S/1000);
+                        break;
+                    case 47:
+                        eeprom_write_dword((uint32_t *) &EE_jerkz,next_target.S/1000);
+                        break;
                     case 51:
                         eeprom_write_dword((uint32_t *) &EE_accel,next_target.S);
                         break;
@@ -920,6 +936,9 @@ void process_gcode_command() {
                         break;
                     case 885:
                         eeprom_write_dword((uint32_t *) &EE_delta_radius,next_target.S);
+                        break;
+                    case 889:
+                        eeprom_write_dword((uint32_t *) &EE_deltasegment,next_target.S);
                         break;
                     #endif
                     }

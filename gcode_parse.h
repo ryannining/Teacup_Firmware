@@ -47,8 +47,10 @@ typedef struct {
     uint8_t         read_string         :1; ///< Currently reading a string.
 		uint8_t					option_all_relative	:1; ///< relative or absolute coordinates?
 		uint8_t					option_e_relative		:1; ///< same for e axis (M82/M83)
+        #ifdef INCH_SUPPORT
 		uint8_t					option_inches				:1; ///< inches or millimeters?
-	};
+        #endif
+    };
 
   uint32_t          N;          ///< line number
   uint32_t          N_expected; ///< expected line number
@@ -56,8 +58,8 @@ typedef struct {
   int32_t           S;          ///< S word (various uses)
   uint16_t          P;          ///< P word (various uses)
 
-	uint8_t						G;				///< G command number
-	uint8_t						M;				///< M command number
+	uint16_t						G;				///< G command number
+	uint16_t						M;				///< M command number
 	TARGET						target;		///< target position: X, Y, Z, E and F
 #ifdef ARC_SUPPORT
     uint32_t  I;

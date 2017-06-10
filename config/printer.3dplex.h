@@ -5,6 +5,20 @@
 *                                                                           *
 \***************************************************************************/
 
+/** \def ARC_SUPPORT
+
+  For G2 and G3, inkscape gcode contain lots of this. Usually slicer 3D never use this feature, save memory
+*/
+
+//#define ARC_SUPPORT
+
+/** \def INCH_SUPPORT
+
+  Might reduce code a little bit
+*/
+
+//#define INCH_SUPPORT
+
 /** \def KINEMATICS_STRAIGHT KINEMATICS_COREXY
 
   This defines the type of kinematics your printer uses. That's essential!
@@ -20,9 +34,54 @@
     A bot using CoreXY kinematics. Typical for CoreXY
     are long and crossing toothed belts and a print head
     moving on the X-Y-plane.
-*/
-//#define KINEMATICS_STRAIGHT
+
+   KINEMATICS_DELTA
+    A bot using CoreXY kinematics. Typical for CoreXY
+    are long and crossing toothed belts and a print head
+    moving on the X-Y-plane.
+
+ */
+
+#define KINEMATICS_STRAIGHT
 //#define KINEMATICS_COREXY
+//#define KINEMATICS_DELTA
+/** \def DELTA_DISTANCE_SEGMENTS DELTA_TIME_SEGMENTS
+ */
+
+//#define DELTASEGMENTS_DISTANCE
+#define DELTASEGMENTS_TIME
+
+/** \def DEFAULT_DELTA_DIAGONAL_ROD
+  The length of your diagonal rod. To be precise, it's the distance 
+  between center point of the carriage joint and the effector joint. 
+  
+    Unit is in micrometer.
+*/
+#define DEFAULT_DELTA_DIAGONAL_ROD 210000
+#define DELTA_SEGMENTS_PER_SECOND 200
+#define DELTA_SEGMENT_UM         500
+
+/** \def DEFAULT_DELTA_RADIUS
+  Or alternatively called horizontal radius. Basically it's diagonal
+  length projected to horizontal axis (x-y plane).
+  
+    Unit is in micrometer.
+*/
+#define DEFAULT_DELTA_RADIUS     107500
+
+/** \def TOWER_X_ANGLE_DEG, TOWER_Y_ANGLE_DEG, TOWER_Z_ANGLE_DEG
+  Angular position of the three delta towers.
+  Ideally, a delta printer's towers are positioned at 210deg, 330deg, and 90deg.
+  
+  Note: There are different convension on tower naming,
+  but in this firmware we will go with XYZ convention. 
+  This is used for consistency with established endstop naming convention.
+
+    Valid range: 0.00 to 360.00. Units are in degrees
+*/
+#define TOWER_X_ANGLE_DEG        210
+#define TOWER_Y_ANGLE_DEG        330
+#define TOWER_Z_ANGLE_DEG        90
 
 /** \def STEPS_PER_M_X STEPS_PER_M_Y STEPS_PER_M_Z STEPS_PER_M_E
   Steps per meter ( = steps per mm * 1000 ), calculate these values

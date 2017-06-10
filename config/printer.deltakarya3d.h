@@ -12,6 +12,13 @@
 
 //#define ARC_SUPPORT
 
+/** \def INCH_SUPPORT
+
+  Might reduce code a little bit
+*/
+
+//#define INCH_SUPPORT
+
 /** \def KINEMATICS_STRAIGHT KINEMATICS_COREXY
 
   This defines the type of kinematics your printer uses. That's essential!
@@ -50,9 +57,9 @@
   
     Unit is in micrometer.
 */
-#define DEFAULT_DELTA_DIAGONAL_ROD 210000
-#define DELTA_SEGMENTS_PER_SECOND 100
-#define DELTA_SEGMENT_UM         3000
+#define DEFAULT_DELTA_DIAGONAL_ROD 190000
+#define DELTA_SEGMENTS_PER_SECOND 200
+#define DELTA_SEGMENT_UM         1000
 
 /** \def DEFAULT_DELTA_RADIUS
   Or alternatively called horizontal radius. Basically it's diagonal
@@ -60,7 +67,7 @@
   
     Unit is in micrometer.
 */
-#define DEFAULT_DELTA_RADIUS     107500
+#define DEFAULT_DELTA_RADIUS     67050
 
 /** \def TOWER_X_ANGLE_DEG, TOWER_Y_ANGLE_DEG, TOWER_Z_ANGLE_DEG
   Angular position of the three delta towers.
@@ -84,26 +91,26 @@
 
     Valid range: 20 to 4'0960'000 (0.02 to 40960 steps/mm)
 */
-#define STEPS_PER_M_X            50000
-#define STEPS_PER_M_Y            50000
-#define STEPS_PER_M_Z            50000
-#define STEPS_PER_M_E            47500
+#define STEPS_PER_M_X            100000
+#define STEPS_PER_M_Y            100000
+#define STEPS_PER_M_Z            100000
+#define STEPS_PER_M_E            725000
 
 /** \def MAXIMUM_FEEDRATE_X MAXIMUM_FEEDRATE_Y MAXIMUM_FEEDRATE_Z MAXIMUM_FEEDRATE_E
   Used for G0 rapid moves and as a cap for all other feedrates.
 */
-#define MAXIMUM_FEEDRATE_X       6000
-#define MAXIMUM_FEEDRATE_Y       6000
-#define MAXIMUM_FEEDRATE_Z       6000
-#define MAXIMUM_FEEDRATE_E       6000
+#define MAXIMUM_FEEDRATE_X       2000
+#define MAXIMUM_FEEDRATE_Y       2000
+#define MAXIMUM_FEEDRATE_Z       2000
+#define MAXIMUM_FEEDRATE_E       300
 
 /** \def SEARCH_FEEDRATE_X SEARCH_FEEDRATE_Y SEARCH_FEEDRATE_Z
   Used when doing precision endstop search and as default feedrate. No
   SEARCH_FEEDRATE_E, as E can't be searched.
 */
-#define SEARCH_FEEDRATE_X        3000
-#define SEARCH_FEEDRATE_Y        3000
-#define SEARCH_FEEDRATE_Z        3000
+#define SEARCH_FEEDRATE_X        2000
+#define SEARCH_FEEDRATE_Y        2000
+#define SEARCH_FEEDRATE_Z        2000
 
 /** \def ENDSTOP_CLEARANCE_X ENDSTOP_CLEARANCE_Y ENDSTOP_CLEARANCE_Z
 
@@ -151,7 +158,7 @@
 //#define Y_MAX                    200.0
 
 //#define Z_MIN                    0.0
-#define Z_MAX                    85
+#define Z_MAX                    192.8
 
 /** \def E_ABSOLUTE
   Some G-code creators produce relative length commands for the extruder,
@@ -179,7 +186,7 @@
     Units: mm/s^2
     Useful range: 1 to 10'000
 */
-#define ACCELERATION             1000
+#define ACCELERATION             300
 
 /** \def LOOKAHEAD
   Define this to enable look-ahead during *ramping* acceleration to smoothly
@@ -210,10 +217,10 @@
     Sane values: 0 to 400
     Valid range: 0 to 65535
 */
-#define MAX_JERK_X               1200
-#define MAX_JERK_Y               1200
-#define MAX_JERK_Z               1200
-#define MAX_JERK_E               1200
+#define MAX_JERK_X               500
+#define MAX_JERK_Y               500
+#define MAX_JERK_Z               500
+#define MAX_JERK_E               500
 
 
 /***************************************************************************\
@@ -338,7 +345,7 @@
   math (hence time) to set up so a longer buffer allows more of the math to
   be done during preceding longer moves.
 */
-#define MOVEBUFFER_SIZE          8
+#define MOVEBUFFER_SIZE          6
 
 /** \def DC_EXTRUDER DC_EXTRUDER_PWM
   If you have a DC motor extruder, configure it as a "heater" above and define
