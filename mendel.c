@@ -116,7 +116,7 @@ void init(void) {
 
   // prepare the power supply
   power_init();
-  recalc_acceleration(0);
+  recalc_acceleration(1);
 
   #ifdef DISPLAY
     display_init();

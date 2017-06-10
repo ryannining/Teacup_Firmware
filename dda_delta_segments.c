@@ -68,11 +68,10 @@ void delta_segments_create(TARGET *target) {
   cartesian_move_sec = (dist / target->F) * 60 >> 4;   //milisec distance(um) * 1mm/1000um * (Feedrate)1min/mm * 60sec/min
 
   if (target->F > 0)
-    segment_total = _DELTA_SEGMENTS * cartesian_move_sec/1000 >> 6;   //distance(um) * 1mm/1000um * (Feedrate)1min/mm * 60sec/min
+    segment_total = (_DELTA_SEGMENTS * cartesian_move_sec/1000) >>6;   //distance(um) * 1mm/1000um * (Feedrate)1min/mm * 60sec/min
   else
     segment_total = 0;
-  sersendf_P(PSTR("SEG:Z or small: dist: %lu segs: %lu move_sec: %lu\n"),
-                      dist,segment_total,cartesian_move_sec);  
+  //sersendf_P(PSTR("SEG:Z or small: dist: %lu segs: %lu move_sec: %lu\n"),dist,segment_total,cartesian_move_sec);  
 #endif /* DELTASEGMENTS_TIME */
 #ifdef DELTASEGMENTS_DISTANCE
   segment_total = dist / seg_size+1;

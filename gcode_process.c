@@ -705,8 +705,8 @@ void process_gcode_command() {
 				//?  FIRMWARE_NAME:Teacup FIRMWARE_URL:http://github.com/traumflug/Teacup_Firmware/ PROTOCOL_VERSION:1.0 MACHINE_TYPE:Mendel EXTRUDER_COUNT:1 TEMP_SENSOR_COUNT:1 HEATER_COUNT:1
 				//?
 
-				sersendf_P(PSTR("FIRMWARE_NAME:Teacup FIRMWARE_URL:http://github.com/traumflug/Teacup_Firmware/ PROTOCOL_VERSION:1.0 MACHINE_TYPE:Mendel EXTRUDER_COUNT:%d TEMP_SENSOR_COUNT:%d HEATER_COUNT:%d\n"), 1, NUM_TEMP_SENSORS, NUM_HEATERS);
-/*
+				//sersendf_P(PSTR("FIRMWARE_NAME:Teacup FIRMWARE_URL:http://github.com/traumflug/Teacup_Firmware/ PROTOCOL_VERSION:1.0 MACHINE_TYPE:Mendel EXTRUDER_COUNT:%d TEMP_SENSOR_COUNT:%d HEATER_COUNT:%d\n"), 1, NUM_TEMP_SENSORS, NUM_HEATERS);
+///*
 #ifdef KINEMATICS_DELTA
 #define MACHINE_TYPE "Delta"
 #endif
@@ -719,8 +719,8 @@ void process_gcode_command() {
 
 #define FIRMWARE_URL "https://github.com/repetier/Repetier-Firmware/"
 
-                //sersendf_P(PSTR("FIRMWARE_NAME:Repetier_1.9 FIRMWARE_URL:null PROTOCOL_VERSION:1.0 MACHINE_TYPE:teacup EXTRUDER_COUNT:1 REPETIER_PROTOCOL:3"));
-*/
+                sersendf_P(PSTR("FIRMWARE_NAME:Repetier_1.9 FIRMWARE_URL:null PROTOCOL_VERSION:1.0 MACHINE_TYPE:teacup EXTRUDER_COUNT:1 REPETIER_PROTOCOL:\n"));
+//*/
                 break;
 
 			case 116:
@@ -843,43 +843,41 @@ void process_gcode_command() {
                 
                  reset_eeprom();
              case 205:
-                sersendf_P(PSTR("EPR:4 153 %lq Zmax\n"),eeprom_read_dword((uint32_t *) &EE_real_zmax));
-                sersendf_P(PSTR("EPR:4 1048 %d ADJTmp\n"),eeprom_read_dword((uint32_t *) &EE_adjust_temp));
-                sersendf_P(PSTR("EPR:4 3 %lq StepX\n"),eeprom_read_dword((uint32_t *) &EE_stepx));
-                sersendf_P(PSTR("EPR:4 7 %lq StepY\n"),eeprom_read_dword((uint32_t *) &EE_stepy));
-                sersendf_P(PSTR("EPR:4 11 %lq StepZ\n"),eeprom_read_dword((uint32_t *) &EE_stepz));
-                sersendf_P(PSTR("EPR:4 0 %lq StepE\n"),eeprom_read_dword((uint32_t *) &EE_stepe));
+                sersendf_P(PSTR("EPR:3 153 %lq Zmax\n"),eeprom_read_dword((uint32_t *) &EE_real_zmax));
+                sersendf_P(PSTR("EPR:3 1048 %d ADJTmp\n"),eeprom_read_dword((uint32_t *) &EE_adjust_temp));
+                sersendf_P(PSTR("EPR:3 3 %lq StepX\n"),eeprom_read_dword((uint32_t *) &EE_stepx));
+                sersendf_P(PSTR("EPR:3 7 %lq StepY\n"),eeprom_read_dword((uint32_t *) &EE_stepy));
+                sersendf_P(PSTR("EPR:3 11 %lq StepZ\n"),eeprom_read_dword((uint32_t *) &EE_stepz));
+                sersendf_P(PSTR("EPR:3 0 %lq StepE\n"),eeprom_read_dword((uint32_t *) &EE_stepe));
 
-                sersendf_P(PSTR("EPR:4 15 %lu MFX\n"),eeprom_read_dword((uint32_t *) &EE_mfx));
-                sersendf_P(PSTR("EPR:4 19 %lu MFY\n"),eeprom_read_dword((uint32_t *) &EE_mfy));
-                sersendf_P(PSTR("EPR:4 23 %lu MFZ\n"),eeprom_read_dword((uint32_t *) &EE_mfz));
-                sersendf_P(PSTR("EPR:4 27 %lu MFE\n"),eeprom_read_dword((uint32_t *) &EE_mfe));
-                sersendf_P(PSTR("EPR:4 15 %lu MFX\n"),eeprom_read_dword((uint32_t *) &EE_mfx));
+                sersendf_P(PSTR("EPR:2 15 %lu MFX\n"),eeprom_read_dword((uint32_t *) &EE_mfx));
+                sersendf_P(PSTR("EPR:2 19 %lu MFY\n"),eeprom_read_dword((uint32_t *) &EE_mfy));
+                sersendf_P(PSTR("EPR:2 23 %lu MFZ\n"),eeprom_read_dword((uint32_t *) &EE_mfz));
+                sersendf_P(PSTR("EPR:2 27 %lu MFE\n"),eeprom_read_dword((uint32_t *) &EE_mfe));
                 
-                sersendf_P(PSTR("EPR:4 15 %lu XYJerk\n"),eeprom_read_dword((uint32_t *) &EE_jerkx));
-                sersendf_P(PSTR("EPR:4 15 %lu Zjerk\n"),eeprom_read_dword((uint32_t *) &EE_jerkz));
+                
+                sersendf_P(PSTR("EPR:2 39 %lu XYJerk\n"),eeprom_read_dword((uint32_t *) &EE_jerkx));
+                sersendf_P(PSTR("EPR:2 47 %lu Zjerk\n"),eeprom_read_dword((uint32_t *) &EE_jerkz));
+                sersendf_P(PSTR("EPR:3 51 %lq Accel\n"),eeprom_read_dword((uint32_t *) &EE_accel));
 
                 #ifdef DELTA_PRINTER
-                sersendf_P(PSTR("EPR:4 133 %lq OfX\n"),eeprom_read_dword((uint32_t *) &EE_x_endstop_adj));
-                sersendf_P(PSTR("EPR:4 137 %lq OfY\n"),eeprom_read_dword((uint32_t *) &EE_y_endstop_adj));
-                sersendf_P(PSTR("EPR:4 141 %lq OfZ\n"),eeprom_read_dword((uint32_t *) &EE_z_endstop_adj));
-                sersendf_P(PSTR("EPR:4 881 %lq RodLen\n"),eeprom_read_dword((uint32_t *) &EE_delta_diagonal_rod));
-                sersendf_P(PSTR("EPR:4 885 %lq HorRad\n"),eeprom_read_dword((uint32_t *) &EE_delta_radius));
-                sersendf_P(PSTR("EPR:4 889 %lq Segment\n"),eeprom_read_dword((uint32_t *) &EE_deltasegment));
+                sersendf_P(PSTR("EPR:3 133 %lq OfX\n"),eeprom_read_dword((uint32_t *) &EE_x_endstop_adj));
+                sersendf_P(PSTR("EPR:3 137 %lq OfY\n"),eeprom_read_dword((uint32_t *) &EE_y_endstop_adj));
+                sersendf_P(PSTR("EPR:3 141 %lq OfZ\n"),eeprom_read_dword((uint32_t *) &EE_z_endstop_adj));
+                sersendf_P(PSTR("EPR:3 881 %lq RodLen\n"),eeprom_read_dword((uint32_t *) &EE_delta_diagonal_rod));
+                sersendf_P(PSTR("EPR:3 885 %lq HorRad\n"),eeprom_read_dword((uint32_t *) &EE_delta_radius));
+                sersendf_P(PSTR("EPR:3 889 %lq Segment\n"),eeprom_read_dword((uint32_t *) &EE_deltasegment));
                 #endif
                 
-                sersendf_P(PSTR("EPR:4 51 %lq Accel\n"),eeprom_read_dword((uint32_t *) &EE_accel));
                 recalc_acceleration(1);
                 break;
              case 206:
+             if (next_target.seen_X)next_target.S=next_target.target.axis[X];
              if (next_target.seen_P)
                 switch (next_target.P) {
                     case 153:
                         if (next_target.seen_Y) {
                                 home_set_zmax(next_target.target.axis[Y],1);
-                        }
-                        if (next_target.seen_X) {
-                                home_set_zmax(next_target.target.axis[X],0);
                         }
                         if (next_target.seen_S) {
                                 home_set_zmax(next_target.S,0);
@@ -942,6 +940,7 @@ void process_gcode_command() {
                         break;
                     #endif
                     }
+                recalc_acceleration(1);
                 
                 break;
       #endif /* EECONFIG */
