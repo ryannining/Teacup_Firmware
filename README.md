@@ -1,6 +1,6 @@
-##############################################################################
-Small modification and tested on custom made 3d/cnc board with arduino 
-##############################################################################
+
+**Small modification and tested on custom made 3d/cnc board with arduino** 
+
 
 
 nano 328p. For GCODE sender, i use my own gcodesender (on github too)
@@ -11,43 +11,52 @@ nano 328p. For GCODE sender, i use my own gcodesender (on github too)
 4. Implement Adjust Temp, (see EEPROM), basically just add /reduce temperature for M109, because who knows same gcode file request same 180degree, but on different printer, different filament loaded, need to add few degree, without editing the Gcode file/reslice.
 5. DELTA Printer , work in progress for nano 328p, of course need low number of line buffer (8 is ok). and maybe other fixes so can work with my gcode sender better.
 
+10-6-2017
+1. Add JerkXY,JerkZ, and segments to EEPROM.
+2. Reset factory M502 (still have bug on zmax and accel)
+3. Limit the F from gcodeprocess, so when calculate segment_total, it will be correct.
+4. Optional to include INCH coordinate (nowdays mosly slicer using mm)
+5. Update configtool
+
+
+
 
 ![Teacup3D PCB](https://raw.githubusercontent.com/ryannining/Teacup_Firmware/master/pcb/schematic.png)
 
-##############################################################################
-#                                                                            #
-# Teacup - lean and efficient firmware for RepRap printers                   #
-#                                                                            #
-# by Triffid Hunter, Traumflug, jakepoz, many others.                        #
-#                                                                            #
-##############################################################################
-
-For installation instructions, see
-http://reprap.org/wiki/Teacup_Firmware#Simple_Installation and/or
-http://reprap.org/wiki/Teacup_Firmware#Developer_Installation
-
-For documentation, see
-http://reprap.org/wiki/Teacup_Firmware
-
-
-##############################################################################
-#                                                                            #
-# This firmware is Copyright (c) ...                                         #
-#   2009 - 2010 Michael Moon aka Triffid_Hunter                              #
-#   2010 - 2013 Markus "Traumflug" Hitter <mah@jump-ing.de>                  #
-#                                                                            #
-# This program is free software; you can redistribute it and/or modify       #
-# it under the terms of the GNU General Public License as published by       #
-# the Free Software Foundation; either version 2 of the License, or          #
-# (at your option) any later version.                                        #
-#                                                                            #
-# This program is distributed in the hope that it will be useful,            #
-# but WITHOUT ANY WARRANTY; without even the implied warranty of             #
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the              #
-# GNU General Public License for more details.                               #
-#                                                                            #
-# You should have received a copy of the GNU General Public License          #
-# along with this program; if not, write to the Free Software                #
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA #
-#                                                                            #
-##############################################################################
+    ##############################################################################
+    #                                                                            #
+    # Teacup - lean and efficient firmware for RepRap printers                   #
+    #                                                                            #
+    # by Triffid Hunter, Traumflug, jakepoz, many others.                        #
+    #                                                                            #
+    ##############################################################################
+    
+    For installation instructions, see
+    http://reprap.org/wiki/Teacup_Firmware#Simple_Installation and/or
+    http://reprap.org/wiki/Teacup_Firmware#Developer_Installation
+    
+    For documentation, see
+    http://reprap.org/wiki/Teacup_Firmware
+    
+    
+    ##############################################################################
+    #                                                                            #
+    # This firmware is Copyright (c) ...                                         #
+    #   2009 - 2010 Michael Moon aka Triffid_Hunter                              #
+    #   2010 - 2013 Markus "Traumflug" Hitter <mah@jump-ing.de>                  #
+    #                                                                            #
+    # This program is free software; you can redistribute it and/or modify       #
+    # it under the terms of the GNU General Public License as published by       #
+    # the Free Software Foundation; either version 2 of the License, or          #
+    # (at your option) any later version.                                        #
+    #                                                                            #
+    # This program is distributed in the hope that it will be useful,            #
+    # but WITHOUT ANY WARRANTY; without even the implied warranty of             #
+    # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the              #
+    # GNU General Public License for more details.                               #
+    #                                                                            #
+    # You should have received a copy of the GNU General Public License          #
+    # along with this program; if not, write to the Free Software                #
+    # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA #
+    #                                                                            #
+    ##############################################################################
