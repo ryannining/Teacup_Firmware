@@ -99,7 +99,7 @@ void home_delta() {
    startpoint.axis[E] = next_target.target.axis[E] = 0; 
    
    dda_new_startpoint();
-   sersendf_P(PSTR("Homing...\n"));
+   //sersendf_P(PSTR("Homing...\n"));
    TARGET t = startpoint;
 
    //move all axis at the same time until an endstop is hit
@@ -124,7 +124,7 @@ void home_delta() {
    startpoint.axis[Z] = next_target.target.axis[Z] = 0;
    dda_new_startpoint();
 
-   sersendf_P(PSTR("First the A..."));
+   //sersendf_P(PSTR("First the A..."));
 
    //home x-axis
    t = startpoint;
@@ -136,12 +136,12 @@ void home_delta() {
       t.F = SEARCH_FEEDRATE_X;
    enqueue_home(&t,0x02,1);
    queue_wait();
-   sersendf_P(PSTR("Hit..."));
+   //sersendf_P(PSTR("Hit..."));
    if (SEARCH_FAST_X > SEARCH_FEEDRATE_X) {
       t.axis[X] = -2 * delta_height;
       t.F = SEARCH_FEEDRATE_X;
       enqueue_home(&t,0x02,0);
-      sersendf_P(PSTR("Back off..."));
+      //sersendf_P(PSTR("Back off..."));
    }
    queue_wait();
 
@@ -150,7 +150,7 @@ void home_delta() {
    t.F = SEARCH_FEEDRATE_X;
    enqueue_home(&t,0,0);
    queue_wait();
-   sersendf_P(PSTR("Adjust...\n"));
+   //sersendf_P(PSTR("Adjust...\n"));
 
    startpoint.axis[X] = next_target.target.axis[X] = 0;
    startpoint.axis[Y] = next_target.target.axis[Y] = 0;
@@ -159,7 +159,7 @@ void home_delta() {
 
    //Y Axis
    t = startpoint;
-   sersendf_P(PSTR("Then the B..."));
+   //sersendf_P(PSTR("Then the B..."));
    t.axis[Y] = 2 * delta_height;
 
    if (SEARCH_FAST_Y > SEARCH_FEEDRATE_Y)
@@ -168,14 +168,14 @@ void home_delta() {
       t.F = SEARCH_FEEDRATE_Y;
    enqueue_home(&t,0x08,1);
    queue_wait();
-   sersendf_P(PSTR("Hit..."));
+   //sersendf_P(PSTR("Hit..."));
 
    if (SEARCH_FAST_Y > SEARCH_FEEDRATE_Y) {
       t.axis[Y] = -2 * delta_height;
       t.F = SEARCH_FEEDRATE_Y;
       enqueue_home(&t,0x08,0);
       queue_wait();
-      sersendf_P(PSTR("Back off..."));
+      //sersendf_P(PSTR("Back off..."));
    }
    queue_wait();
 
@@ -183,7 +183,7 @@ void home_delta() {
    t.axis[Y] = t.axis[Y] + endstop_adj_y;
    t.F = SEARCH_FEEDRATE_Y;
    enqueue_home(&t,0,0);
-   sersendf_P(PSTR("Adjust...\n"));
+   //sersendf_P(PSTR("Adjust...\n"));
    queue_wait();
 
    startpoint.axis[X] = next_target.target.axis[X] = 0;
@@ -193,7 +193,7 @@ void home_delta() {
 
    //Z Axis
    t = startpoint;
-   sersendf_P(PSTR("Finally the C..."));
+   //sersendf_P(PSTR("Finally the C..."));
    t.axis[Z] = 2 * delta_height;
 
    if (SEARCH_FAST_Z > SEARCH_FEEDRATE_Z)
@@ -202,14 +202,14 @@ void home_delta() {
       t.F = SEARCH_FEEDRATE_Z;
    enqueue_home(&t,0x20,1);
    queue_wait();
-   sersendf_P(PSTR("Hit..."));
+   //sersendf_P(PSTR("Hit..."));
 
    if (SEARCH_FAST_Z > SEARCH_FEEDRATE_Z) {
       t.axis[Z] = -2 * delta_height;
       t.F = SEARCH_FEEDRATE_Z;
       enqueue_home(&t,0x20,0);
       queue_wait();
-      sersendf_P(PSTR("Back off..."));
+      //sersendf_P(PSTR("Back off..."));
    }
    queue_wait();
 
@@ -218,11 +218,11 @@ void home_delta() {
    t.F = SEARCH_FEEDRATE_Z;
    enqueue_home(&t,0,0);
    queue_wait();
-   sersendf_P(PSTR("Adjust...\n"));
+   //sersendf_P(PSTR("Adjust...\n"));
    queue_wait();
 
    bypass_delta=0;
-   sersendf_P(PSTR("Homing Complete.\n"));
+   //sersendf_P(PSTR("Homing Complete.\n"));
    startpoint.axis[X] = next_target.target.axis[X] = 0;
    startpoint.axis[Y] = next_target.target.axis[Y] = 0;
    startpoint.axis[Z] = next_target.target.axis[Z] = delta_height;

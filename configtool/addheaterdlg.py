@@ -17,7 +17,7 @@ class AddHeaterDlg(wx.Dialog):
 
     sz = wx.BoxSizer(wx.VERTICAL)
     gsz = wx.GridBagSizer()
-    gsz.AddSpacer((20, 20), pos = (0, 0))
+    gsz.Add((20, 20), pos = (0, 0))
 
     lsz = wx.BoxSizer(wx.HORIZONTAL)
     st = wx.StaticText(self, wx.ID_ANY, "Heater Name:", size = (80, -1),
@@ -67,12 +67,12 @@ class AddHeaterDlg(wx.Dialog):
     self.cbPwm.SetToolTipString("Use Pulse Width Modulation in case the "
                                 "choosen pin allows to do so.")
 
-    gsz.AddSpacer((50, 15), pos = (1, 2))
+    gsz.Add((50, 15), pos = (1, 2))
     gsz.Add(self.cbPwm, pos = (1, 3))
-    gsz.AddSpacer((20, 20), pos = (4, 4))
+    gsz.Add((20, 20), pos = (4, 4))
 
     sz.Add(gsz)
-    sz.AddSpacer((30, 30))
+    sz.Add((30, 30))
 
     bsz = wx.BoxSizer(wx.HORIZONTAL)
 
@@ -81,7 +81,7 @@ class AddHeaterDlg(wx.Dialog):
     self.bSave.Bind(wx.EVT_BUTTON, self.onSave)
     bsz.Add(self.bSave)
 
-    bsz.AddSpacer(30, 100)
+    bsz.Add(30, 100)
 
     self.bCancel = wx.Button(self, wx.ID_ANY, "Cancel", size = BSIZESMALL)
     self.bCancel.SetFont(font)
@@ -89,7 +89,7 @@ class AddHeaterDlg(wx.Dialog):
     bsz.Add(self.bCancel)
 
     sz.Add(bsz, flag = wx.ALIGN_CENTER_HORIZONTAL)
-    sz.AddSpacer((10, 10))
+    sz.Add((10, 10))
     self.SetSizer(sz)
 
     self.checkDlgValidity()

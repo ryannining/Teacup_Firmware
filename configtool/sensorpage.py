@@ -30,13 +30,13 @@ class SensorsPage(wx.Panel, Page):
     labelWidth = 120
 
     sz = wx.GridBagSizer()
-    sz.AddSpacer((10, 10), pos = (0, 0))
+    sz.Add((10, 10), pos = (0, 0))
 
     self.sensors = []
 
     self.lb = SensorList(self, font)
     sz.Add(self.lb, pos = (1, 1))
-    sz.AddSpacer((20, 20), pos = (1, 2))
+    sz.Add((20, 20), pos = (1, 2))
 
     bsz = wx.BoxSizer(wx.VERTICAL)
     self.bAdd = wx.Button(self, wx.ID_ANY, "Add", size = BSIZESMALL)
@@ -48,7 +48,7 @@ class SensorsPage(wx.Panel, Page):
 
     bsz.Add(self.bAdd)
 
-    bsz.AddSpacer((10, 10))
+    bsz.Add((10, 10))
     self.bModify = wx.Button(self, wx.ID_ANY, "Modify", size = BSIZESMALL)
     self.bModify.SetBackgroundColour(self.deco.getBackgroundColour())
     self.bModify.SetFont(font)
@@ -57,7 +57,7 @@ class SensorsPage(wx.Panel, Page):
     bsz.Add(self.bModify)
     self.bModify.SetToolTipString("Modify the selected temperature sensor.")
 
-    bsz.AddSpacer((10, 10))
+    bsz.Add((10, 10))
     self.bDelete = wx.Button(self, wx.ID_ANY, "Delete", size = BSIZESMALL)
     self.bDelete.SetBackgroundColour(self.deco.getBackgroundColour())
     self.bDelete.SetFont(font)

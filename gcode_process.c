@@ -878,8 +878,7 @@ void process_gcode_command() {
                     case 153:
                         if (next_target.seen_Y) {
                                 home_set_zmax(next_target.target.axis[Y],1);
-                        }
-                        if (next_target.seen_S) {
+                        } else {
                                 home_set_zmax(next_target.S,0);
                         }
                     break;

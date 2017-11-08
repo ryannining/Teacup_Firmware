@@ -751,6 +751,7 @@ void dda_start(DDA *dda) {
         config.h". On the various tries and measurement results, see commits
         starting with "DDA: Move axis calculations into loops, part 6".
 */
+
 void dda_step(DDA *dda) {
 
   #if ! defined ACCELERATION_TEMPORAL
@@ -767,6 +768,7 @@ void dda_step(DDA *dda) {
       if (move_state.counter[Y] < 0) {
         move_state.counter[Y] += dda->total_steps;
         y_step();
+        
         move_state.steps[Y]--;
       }
 		}
@@ -775,6 +777,7 @@ void dda_step(DDA *dda) {
       if (move_state.counter[Z] < 0) {
         move_state.counter[Z] += dda->total_steps;
         z_step();
+        
         move_state.steps[Z]--;
       }
 		}
@@ -783,6 +786,7 @@ void dda_step(DDA *dda) {
       if (move_state.counter[E] < 0) {
         move_state.counter[E] += dda->total_steps;
         e_step();
+       
         move_state.steps[E]--;
       }
 		}

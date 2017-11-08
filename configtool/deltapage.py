@@ -25,17 +25,17 @@ class DeltaPage(wx.Panel, Page):
     labelWidth = 100;
 
     sz = wx.GridBagSizer()
-    sz.AddSpacer((10, 10), pos = (0, 0))
-    sz.AddSpacer((90, 10), pos = (0, 4))
+    sz.Add((10, 10), pos = (0, 0))
+    sz.Add((90, 10), pos = (0, 4))
 
     b = wx.StaticBox(self, wx.ID_ANY, "Delta Geometry")
     b.SetFont(font)
     sbox = wx.StaticBoxSizer(b, wx.VERTICAL)
-    sbox.AddSpacer((5, 5))
+    sbox.Add((5, 5))
     for k in self.geoKeys:
       tc = self.addTextCtrl(k, labelWidth, self.onTextCtrlFloat)
       sbox.Add(tc)
-      sbox.AddSpacer((5, 5))
+      sbox.Add((5, 5))
 
     sz.Add(sbox, pos = (1, 1))
 

@@ -113,9 +113,10 @@ void dda_find_crossing_speed(DDA *prev, DDA *current) {
 
   for (i = X; i < E; i++) { // AXIS_COUNT
     if (get_direction(prev, i) == get_direction(current, i))
-      dv = currF[i] > prevF[i] ? currF[i] - prevF[i] : prevF[i] - currF[i];
+      dv = (currF[i] > prevF[i] ? currF[i] - prevF[i] : prevF[i] - currF[i]);
+      
     else
-      dv = currF[i] + prevF[i];
+      dv = (currF[i] + prevF[i])<<4;
 
     if (dv) {
       speed_factor = ((uint32_t)pgm_read_dword(&maximum_jerk_P[i]) << 8) / dv;

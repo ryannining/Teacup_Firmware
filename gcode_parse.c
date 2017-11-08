@@ -12,6 +12,7 @@
 #include	"debug.h"
 #include	"heater.h"
 #include	"sersendf.h"
+#include    "dda_maths.h"
 
 #include	"gcode_process.h"
 

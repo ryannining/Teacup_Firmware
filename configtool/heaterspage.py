@@ -15,14 +15,14 @@ class HeatersPage(wx.Panel, Page):
     self.id = idPg
 
     sz = wx.GridBagSizer()
-    sz.AddSpacer((30, 30), pos = (0, 0))
+    sz.Add((30, 30), pos = (0, 0))
 
     self.heaters = []
     self.validPins = pinNames
 
     self.lb = HeaterList(self, font)
     sz.Add(self.lb, pos = (1, 1))
-    sz.AddSpacer((20, 20), pos = (1, 2))
+    sz.Add((20, 20), pos = (1, 2))
 
     bsz = wx.BoxSizer(wx.VERTICAL)
 
@@ -33,7 +33,7 @@ class HeatersPage(wx.Panel, Page):
     self.bAdd.SetToolTipString("Add a heater to the configuration.")
     bsz.Add(self.bAdd)
 
-    bsz.AddSpacer((10, 10))
+    bsz.Add((10, 10))
 
     self.bModify = wx.Button(self, wx.ID_ANY, "Modify", size = BSIZESMALL)
     self.bModify.SetBackgroundColour(self.deco.getBackgroundColour())
@@ -43,7 +43,7 @@ class HeatersPage(wx.Panel, Page):
     self.bModify.SetToolTipString("Modify the selected heater.")
     bsz.Add(self.bModify)
 
-    bsz.AddSpacer((10, 10))
+    bsz.Add((10, 10))
 
     self.bDelete = wx.Button(self, wx.ID_ANY, "Delete", size = BSIZESMALL)
     self.bDelete.SetBackgroundColour(self.deco.getBackgroundColour())

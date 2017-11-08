@@ -2,6 +2,7 @@
 #include	"delay.h"
 
 static char ps_is_on = 0;
+const uint8_t ulsteps[8]={0b1000,0b1100,0b0100,0b0110,0x0010,0b0011,0b0001,0b1001};
 
 /// step/psu timeout
 volatile uint8_t	psu_timeout = 0;
@@ -10,6 +11,8 @@ volatile uint8_t	psu_timeout = 0;
 
   This sets pins as input or output, appropriate for their usage.
 */
+
+
 void pinio_init(void) {
   /// X Stepper.
   SET_OUTPUT(X_STEP_PIN); WRITE(X_STEP_PIN, 0);
@@ -85,23 +88,26 @@ void pinio_init(void) {
   #endif
 
   /// Z Stepper Enable.
-  #ifdef Z_ENABLE_PIN
-    SET_OUTPUT(Z_ENABLE_PIN);
-    #ifdef Z_INVERT_ENABLE
-      WRITE(Z_ENABLE_PIN, 0);
-    #else
-      WRITE(Z_ENABLE_PIN, 1);
-    #endif
-  #endif
-
+  #ifndef Z_UL4_PIN
+      #ifdef Z_ENABLE_PIN
+        SET_OUTPUT(Z_ENABLE_PIN);
+        #ifdef Z_INVERT_ENABLE
+          WRITE(Z_ENABLE_PIN, 0);
+        #else
+          WRITE(Z_ENABLE_PIN, 1);
+        #endif
+      #endif
+  #endif  
   /// E Stepper Enable.
-  #ifdef E_ENABLE_PIN
-    SET_OUTPUT(E_ENABLE_PIN);
-    #ifdef E_INVERT_ENABLE
-      WRITE(E_ENABLE_PIN, 0);
-    #else
-      WRITE(E_ENABLE_PIN, 1);
-    #endif
+  #ifndef E_UL4_PIN
+      #ifdef E_ENABLE_PIN
+        SET_OUTPUT(E_ENABLE_PIN);
+        #ifdef E_INVERT_ENABLE
+          WRITE(E_ENABLE_PIN, 0);
+        #else
+          WRITE(E_ENABLE_PIN, 1);
+        #endif
+      #endif
   #endif
 
   #ifdef  STEPPER_ENABLE_PIN

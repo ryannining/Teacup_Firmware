@@ -1,3 +1,5 @@
+#define RESOLUTION 10000
+
 #ifndef	_DDA_MATHS_H
 #define	_DDA_MATHS_H
 

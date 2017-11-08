@@ -172,16 +172,105 @@ void pinio_init(void);
 void power_on(void);
 void power_off(void);
 
+const uint8_t ulsteps[8];
+
+#ifdef X_UL4_PIN
+    uint8_t x_dir,x_steps;
+    #define	_x_step(x)					do { } while (0)
+    //#define	x_step()						do { } while (0)
+    #define	x_direction(x)			(x_dir=x)
+    inline void x_step(void){
+        if (x_dir==0) {
+            x_steps++;
+        }else {
+            x_steps--;
+        }
+        x_steps&=7;
+        uint8_t b=ulsteps[x_steps];
+        WRITE(X_STEP_PIN,b & 1 );
+        WRITE(X_DIR_PIN,b & 2 );
+        WRITE(X_ENABLE_PIN,b & 4 );
+        WRITE(X_UL4_PIN,b & 8 );
+        
+    }
+        
+#endif
+#ifdef Y_UL4_PIN
+    uint8_t y_dir,y_steps;
+    #define	_y_step(x)					do { } while (0)
+    //#define	y_step()						do { } while (0)
+    #define	y_direction(x)			(y_dir=x)
+    inline void y_step(void){
+        if (y_dir==0) {
+            y_steps++;
+        }else {
+            y_steps--;
+        }
+        y_steps&=7;
+        uint8_t b=ulsteps[y_steps];
+        WRITE(Y_STEP_PIN,b & 1 );
+        WRITE(Y_DIR_PIN,b & 2 );
+        WRITE(Y_ENABLE_PIN,b & 4 );
+        WRITE(Y_UL4_PIN,b & 8 );
+        
+    }
+        
+#endif
+#ifdef Z_UL4_PIN
+    uint8_t z_dir,z_steps;
+    #define	_z_step(x)					do { } while (0)
+    //#define	z_step()						do { } while (0)
+    #define	z_direction(x)			(z_dir=x)
+    inline void z_step(void){
+        if (z_dir==0) {
+            z_steps++;
+        }else {
+            z_steps--;
+        }
+        z_steps&=7;
+        uint8_t b=ulsteps[z_steps];
+        WRITE(Z_STEP_PIN,b & 1 );
+        WRITE(Z_DIR_PIN,b & 2 );
+        WRITE(Z_ENABLE_PIN,b & 4 );
+        WRITE(Z_UL4_PIN,b & 8 );
+        
+    }
+        
+#endif
+#ifdef E_UL4_PIN
+    uint8_t e_dir,e_steps;
+    #define	_e_step(x)					do { } while (0)
+    //#define	e_step()						do { } while (0)
+    #define	e_direction(x)			(e_dir=x)
+    inline void e_step(void){
+        if (e_dir==0) {
+            e_steps++;
+        }else {
+            e_steps--;
+        }
+        e_steps&=7;
+        uint8_t b=ulsteps[e_steps];
+        WRITE(E_STEP_PIN,b & 1 );
+        WRITE(E_DIR_PIN,b & 2 );
+        WRITE(E_ENABLE_PIN,b & 4 );
+        WRITE(E_UL4_PIN,b & 8 );
+        
+    }
+        
+#endif
+
 /*
 X Stepper
 */
 
-#define	_x_step(st)						WRITE(X_STEP_PIN, st)
-#define x_step()              _x_step(1)
-#ifndef	X_INVERT_DIR
-	#define	x_direction(dir)		WRITE(X_DIR_PIN, dir)
-#else
-	#define	x_direction(dir)		WRITE(X_DIR_PIN, (dir)^1)
+#ifndef X_UL4_PIN
+    #define	_x_step(st)						WRITE(X_STEP_PIN, st)
+    #define x_step()              _x_step(1)
+    #ifndef	X_INVERT_DIR
+        #define	x_direction(dir)		WRITE(X_DIR_PIN, dir)
+    #else
+        #define	x_direction(dir)		WRITE(X_DIR_PIN, (dir)^1)
+    #endif
 #endif
 #ifdef	X_MIN_PIN
 	#ifndef X_INVERT_MIN
@@ -205,13 +294,14 @@ X Stepper
 /*
 Y Stepper
 */
-
-#define	_y_step(st)						WRITE(Y_STEP_PIN, st)
-#define y_step()              _y_step(1)
-#ifndef	Y_INVERT_DIR
-	#define	y_direction(dir)		WRITE(Y_DIR_PIN, dir)
-#else
-	#define	y_direction(dir)		WRITE(Y_DIR_PIN, (dir)^1)
+#ifndef Y_UL4_PIN
+    #define	_y_step(st)						WRITE(Y_STEP_PIN, st)
+    #define y_step()              _y_step(1)
+    #ifndef	Y_INVERT_DIR
+        #define	y_direction(dir)		WRITE(Y_DIR_PIN, dir)
+    #else
+        #define	y_direction(dir)		WRITE(Y_DIR_PIN, (dir)^1)
+    #endif
 #endif
 #ifdef	Y_MIN_PIN
 	#ifndef Y_INVERT_MIN
@@ -236,19 +326,22 @@ Y Stepper
 Z Stepper
 */
 
-#if defined Z_STEP_PIN && defined Z_DIR_PIN
-	#define	_z_step(st)					WRITE(Z_STEP_PIN, st)
-  #define z_step()            _z_step(1)
-	#ifndef	Z_INVERT_DIR
-		#define	z_direction(dir)	WRITE(Z_DIR_PIN, dir)
-	#else
-		#define	z_direction(dir)	WRITE(Z_DIR_PIN, (dir)^1)
-	#endif
-#else
-	#define	_z_step(x)					do { } while (0)
-	#define	z_step()						do { } while (0)
-	#define	z_direction(x)			do { } while (0)
+#ifndef Z_UL4_PIN
+    #if defined Z_STEP_PIN && defined Z_DIR_PIN
+        #define	_z_step(st)					WRITE(Z_STEP_PIN, st)
+      #define z_step()            _z_step(1)
+        #ifndef	Z_INVERT_DIR
+            #define	z_direction(dir)	WRITE(Z_DIR_PIN, dir)
+        #else
+            #define	z_direction(dir)	WRITE(Z_DIR_PIN, (dir)^1)
+        #endif
+    #else
+        #define	_z_step(x)					do { } while (0)
+        #define	z_step()						do { } while (0)
+        #define	z_direction(x)			do { } while (0)
+    #endif
 #endif
+
 #ifdef	Z_MIN_PIN
 	#ifndef Z_INVERT_MIN
 		#define z_min()						(READ(Z_MIN_PIN)?1:0)
@@ -271,21 +364,21 @@ Z Stepper
 /*
 Extruder
 */
-
-#if defined E_STEP_PIN && defined E_DIR_PIN
-	#define	_e_step(st)					WRITE(E_STEP_PIN, st)
-  #define e_step()            _e_step(1)
-	#ifndef	E_INVERT_DIR
-		#define	e_direction(dir)	WRITE(E_DIR_PIN, dir)
-	#else
-		#define	e_direction(dir)	WRITE(E_DIR_PIN, (dir)^1)
-	#endif
-#else
-	#define	_e_step(st)					do { } while (0)
-	#define	e_step()						do { } while (0)
-	#define	e_direction(dir)		do { } while (0)
+#ifndef E_UL4_PIN
+    #if defined E_STEP_PIN && defined E_DIR_PIN
+        #define	_e_step(st)					WRITE(E_STEP_PIN, st)
+      #define e_step()            _e_step(1)
+        #ifndef	E_INVERT_DIR
+            #define	e_direction(dir)	WRITE(E_DIR_PIN, dir)
+        #else
+            #define	e_direction(dir)	WRITE(E_DIR_PIN, (dir)^1)
+        #endif
+    #else
+        #define	_e_step(st)					do { } while (0)
+        #define	e_step()						do { } while (0)
+        #define	e_direction(dir)		do { } while (0)
+    #endif
 #endif
-
 /*
 End Step - All Steppers
 (so we don't have to delay in interrupt context)
@@ -336,7 +429,7 @@ Stepper Enable Pins
 	#define	y_disable()					do { } while (0)
 #endif
 
-#ifdef	Z_ENABLE_PIN
+#ifdef	Z_ENABLE_PIN && !defined Z_UL4_PIN
 	#ifdef	Z_INVERT_ENABLE
 		#define	z_enable()				do { WRITE(Z_ENABLE_PIN, 0); } while (0)
 		#define	z_disable()				do { WRITE(Z_ENABLE_PIN, 1); } while (0)
@@ -349,7 +442,7 @@ Stepper Enable Pins
 	#define	z_disable()					do { } while (0)
 #endif
 
-#ifdef	E_ENABLE_PIN
+#ifdef	E_ENABLE_PIN && !defined E_UL4_PIN
 	#ifdef	E_INVERT_ENABLE
 		#define	e_enable()				do { WRITE(E_ENABLE_PIN, 0); } while (0)
 		#define	e_disable()				do { WRITE(E_ENABLE_PIN, 1); } while (0)

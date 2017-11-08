@@ -52,10 +52,10 @@ class AddSensorDlg(wx.Dialog):
     sizer = wx.BoxSizer(wx.VERTICAL)
 
     hsz = wx.BoxSizer(wx.HORIZONTAL)
-    hsz.AddSpacer((10, 10))
+    hsz.Add((10, 10))
 
     csz = wx.BoxSizer(wx.VERTICAL)
-    csz.AddSpacer((10, 10))
+    csz.Add((10, 10))
 
     lsz = wx.BoxSizer(wx.HORIZONTAL)
     st = wx.StaticText(self, wx.ID_ANY, "Heater Name:", size = (labelWidth, -1),
@@ -88,7 +88,7 @@ class AddSensorDlg(wx.Dialog):
     self.tcName.SetSelection(0)
 
     csz.Add(lsz)
-    csz.AddSpacer((10, 10))
+    csz.Add((10, 10))
 
     lsz = wx.BoxSizer(wx.HORIZONTAL)
     st = wx.StaticText(self, wx.ID_ANY, "Sensor Type:", size = (labelWidth, -1),
@@ -119,7 +119,7 @@ class AddSensorDlg(wx.Dialog):
     lsz.Add(ch)
 
     csz.Add(lsz)
-    csz.AddSpacer((10, 10))
+    csz.Add((10, 10))
 
     lsz = wx.BoxSizer(wx.HORIZONTAL)
     st = wx.StaticText(self, wx.ID_ANY, "Pin:", size = (labelWidth, -1),
@@ -140,7 +140,7 @@ class AddSensorDlg(wx.Dialog):
     self.chPin.SetToolTipString("Choose a pin name for this sensor.")
 
     csz.Add(lsz)
-    csz.AddSpacer((10, 10))
+    csz.Add((10, 10))
 
     lsz = wx.BoxSizer(wx.HORIZONTAL)
     st = wx.StaticText(self, wx.ID_ANY, "", size = (labelWidth, -1),
@@ -156,7 +156,7 @@ class AddSensorDlg(wx.Dialog):
     lsz.Add(self.param0)
 
     csz.Add(lsz)
-    csz.AddSpacer((10, 10))
+    csz.Add((10, 10))
 
     lsz = wx.BoxSizer(wx.HORIZONTAL)
     st = wx.StaticText(self, wx.ID_ANY, "", size = (labelWidth, -1),
@@ -171,7 +171,7 @@ class AddSensorDlg(wx.Dialog):
     lsz.Add(self.param1)
 
     csz.Add(lsz)
-    csz.AddSpacer((10, 10))
+    csz.Add((10, 10))
 
     lsz = wx.BoxSizer(wx.HORIZONTAL)
     st = wx.StaticText(self, wx.ID_ANY, "", size = (labelWidth, -1),
@@ -186,7 +186,7 @@ class AddSensorDlg(wx.Dialog):
     lsz.Add(self.param2)
 
     csz.Add(lsz)
-    csz.AddSpacer((10, 10))
+    csz.Add((10, 10))
 
     lsz = wx.BoxSizer(wx.HORIZONTAL)
     st = wx.StaticText(self, wx.ID_ANY, "", size = (labelWidth, -1),
@@ -201,7 +201,7 @@ class AddSensorDlg(wx.Dialog):
     lsz.Add(self.param3)
 
     csz.Add(lsz)
-    csz.AddSpacer((10, 10))
+    csz.Add((10, 10))
 
     lsz = wx.BoxSizer(wx.HORIZONTAL)
     st = wx.StaticText(self, wx.ID_ANY, "", size = (labelWidth, -1),
@@ -216,7 +216,7 @@ class AddSensorDlg(wx.Dialog):
     lsz.Add(self.param4)
 
     csz.Add(lsz)
-    csz.AddSpacer((10, 10))
+    csz.Add((10, 10))
 
     lsz = wx.BoxSizer(wx.HORIZONTAL)
     st = wx.StaticText(self, wx.ID_ANY, "", size = (labelWidth, -1),
@@ -231,7 +231,7 @@ class AddSensorDlg(wx.Dialog):
     lsz.Add(self.param5)
 
     csz.Add(lsz)
-    csz.AddSpacer((10, 10))
+    csz.Add((10, 10))
 
     lsz = wx.BoxSizer(wx.HORIZONTAL)
     st = wx.StaticText(self, wx.ID_ANY, "", size = (labelWidth, -1),
@@ -246,15 +246,15 @@ class AddSensorDlg(wx.Dialog):
     lsz.Add(self.param6)
 
     csz.Add(lsz)
-    csz.AddSpacer((10, 10))
+    csz.Add((10, 10))
 
-    csz.AddSpacer((10, 10))
+    csz.Add((10, 10))
 
     hsz.Add(csz)
-    hsz.AddSpacer((10, 10))
+    hsz.Add((10, 10))
 
     csz = wx.BoxSizer(wx.VERTICAL)
-    csz.AddSpacer((30, 45))
+    csz.Add((30, 45))
 
     lsz = wx.BoxSizer(wx.HORIZONTAL)
     st = wx.StaticText(self, wx.ID_ANY, "Presets:",
@@ -272,12 +272,12 @@ class AddSensorDlg(wx.Dialog):
     lsz.Add(ch)
 
     csz.Add(lsz)
-    csz.AddSpacer((10, 50))
+    csz.Add((10, 50))
 
     b = wx.StaticBox(self, wx.ID_ANY, "Temp Table Algorithm")
     b.SetFont(font)
     sbox = wx.StaticBoxSizer(b, wx.VERTICAL)
-    sbox.AddSpacer((5, 5))
+    sbox.Add((5, 5))
     style = wx.RB_GROUP
     self.rbMethod = []
     for k in MethodLabels:
@@ -288,13 +288,13 @@ class AddSensorDlg(wx.Dialog):
       style = 0
 
       sbox.Add(rb, 1, wx.LEFT + wx.RIGHT, 16)
-      sbox.AddSpacer((5, 5))
+      sbox.Add((5, 5))
 
     self.rbMethod[self.currentMethod].SetValue(True);
     csz.Add(sbox)
 
     hsz.Add(csz)
-    hsz.AddSpacer((10, 10))
+    hsz.Add((10, 10))
 
     sizer.Add(hsz)
 
@@ -306,7 +306,7 @@ class AddSensorDlg(wx.Dialog):
     bsz.Add(self.bSave)
     self.bSave.Enable(False)
 
-    bsz.AddSpacer((30, 10))
+    bsz.Add((30, 10))
 
     self.bCancel = wx.Button(self, wx.ID_ANY, "Cancel", size = BSIZESMALL)
     self.bCancel.SetFont(font)
@@ -314,7 +314,7 @@ class AddSensorDlg(wx.Dialog):
     bsz.Add(self.bCancel)
 
     sizer.Add(bsz, flag = wx.ALIGN_CENTER_HORIZONTAL)
-    sizer.AddSpacer((10, 10))
+    sizer.Add((10, 10))
 
     self.SetSizer(sizer)
     self.Fit()

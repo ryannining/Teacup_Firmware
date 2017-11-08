@@ -26,10 +26,6 @@ Dragon on 0.3mm layer.
 
 ![image](https://user-images.githubusercontent.com/11457832/26998803-9b35f89c-4db3-11e7-8128-b8e439bd99cc.png)
 
-Using Repetier Host, can use EEPROM manager too
-
-![image](https://user-images.githubusercontent.com/11457832/27000800-17e81552-4de4-11e7-863d-b2c5c0c6e362.png)
-
 
 
 ![Teacup3D PCB](https://raw.githubusercontent.com/ryannining/Teacup_Firmware/master/pcb/schematic.png)
