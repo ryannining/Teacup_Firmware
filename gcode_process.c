@@ -29,7 +29,7 @@
 
 /// the current tool
 uint8_t tool;
-
+uint8_t qretract;
 /// the tool to be changed when we get an M6
 uint8_t next_tool;
 extern axes_uint32_t  maximum_feedrate_P;
@@ -243,7 +243,7 @@ void process_gcode_command() {
                      #ifdef DELTA_PRINTER
                      home();
                      #else
-				/*backup_f = next_target.target.F;
+				backup_f = next_target.target.F;
 				next_target.target.F = MAXIMUM_FEEDRATE_X * 2L;
 				next_target.target.axis[X]=0;
                 next_target.target.axis[Y]=0;
@@ -251,16 +251,16 @@ void process_gcode_command() {
  
                 enqueue(&next_target.target);
 				next_target.target.F = backup_f;
-				*/	
+					
                     home();
                     #endif
 				}
                 update_current_position();
-				sersendf_P(PSTR("X:%lq Y:%lq Z:%lq E:%lq F:%lu\n"),
+				sersendf_P(PSTR("X: %lq Y: %lq Z: %lq E: %lq\n"),  //F:%lu\n"
                         current_position.axis[X], current_position.axis[Y],
-                        current_position.axis[Z], current_position.axis[E],
-				                current_position.F);
+                        current_position.axis[Z], current_position.axis[E]);//,current_position.F);
                 
+                qretract=0;
 				break;
 
 			case 90:
@@ -456,7 +456,8 @@ void process_gcode_command() {
         gcode_sources &= ! GCODE_SOURCE_SD;
         break;
       #endif /* SD */
-
+            case 209:
+                    if (next_target.seen_S) qretract=next_target.S;
 			case 82:
 				//? --- M82 - Set E codes absolute ---
 				//?

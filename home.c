@@ -270,6 +270,7 @@ void home_x_positive() {
 		TARGET t = startpoint;
 
     t.axis[X] = +1000000;
+    
     if (SEARCH_FAST_X > SEARCH_FEEDRATE_X)
       t.F = SEARCH_FAST_X;
     else
@@ -407,7 +408,8 @@ void home_z_positive() {
 
 		// set Z home
 		queue_wait();
-		// set position to MAX
+        // set position to MAX
+    
     int32_t zmax=eeprom_read_dword((uint32_t *) &EE_real_zmax);
     //if (abs(zmax-Z_MAX*1000)>20000) zmax=Z_MAX*1000;
     startpoint.axis[Z] = next_target.target.axis[Z] = zmax;

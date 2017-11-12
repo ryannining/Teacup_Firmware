@@ -81,8 +81,8 @@
 //#define Z_INVERT_MAX
 #define Z_INVERT_ENABLE
 
-#define E_STEP_PIN               AIO2
-#define E_DIR_PIN                AIO1
+#define E_STEP_PIN               AIO1
+#define E_DIR_PIN                AIO0
 #define E_ENABLE_PIN             DIO10
 //#define E_UL4_PIN                DIO24
 //#define E_INVERT_DIR

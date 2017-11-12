@@ -923,7 +923,7 @@ void dda_step(DDA *dda) {
       z_disable();
     #endif
    #ifndef DELTA_PRINTER
-		z_disable();
+		//z_disable();
     #endif
 
     // No need to restart timer here.
@@ -1064,7 +1064,7 @@ void dda_clock() {
       #else
         dda->live = 0;
       #endif
-
+      
       endstops_off();
     }
   } /* ! move_state.endstop_stop */
