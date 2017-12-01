@@ -144,7 +144,7 @@ void reload_acceleration_eeprom(void){
     maximum_feedrate_P[E]=(uint32_t)eeprom_read_dword(&EE_mfe);
     
     maximum_jerk_P[X]=maximum_jerk_P[Y]=(uint32_t)eeprom_read_dword(&EE_jerkx);
-    maximum_jerk_P[Z]=(uint32_t)eeprom_read_dword(&EE_jerkz);
+    maximum_jerk_P[E]=maximum_jerk_P[Z]=(uint32_t)eeprom_read_dword(&EE_jerkz);
     
     _ACCELERATION=eeprom_read_dword(&EE_accel)/1000;    
     #ifdef DELTA_PRINTER
@@ -183,13 +183,13 @@ void recalc_acceleration(uint8_t readeeprom){
 
       c0_P[0]=(uint32_t)(F_CPU / sqrt((_STEPS_PER_M[X] * _ACCELERATION) / 2000.));
       c0_P[1]=(uint32_t)(F_CPU / sqrt((_STEPS_PER_M[Y] * _ACCELERATION) / 2000.));
-      c0_P[2]=(uint32_t)(F_CPU / sqrt((_STEPS_PER_M[Z] * _ACCELERATION) / 2000.));
-      c0_P[3]=(uint32_t)(F_CPU / sqrt((_STEPS_PER_M[E] * _ACCELERATION) / 2000.));
+      c0_P[2]=(uint32_t)(F_CPU / sqrt((_STEPS_PER_M[Z] * ACCELERATION) / 2000.));
+      c0_P[3]=(uint32_t)(F_CPU / sqrt((_STEPS_PER_M[E] * ACCELERATION) / 2000.));
  
       acc_ramp_div_P[0]=(uint32_t)((7200000.0f * _ACCELERATION) / _STEPS_PER_M[X]);
       acc_ramp_div_P[1]=(uint32_t)((7200000.0f * _ACCELERATION) / _STEPS_PER_M[Y]);
-      acc_ramp_div_P[2]=(uint32_t)((7200000.0f * _ACCELERATION) / _STEPS_PER_M[Z]);
-      acc_ramp_div_P[3]=(uint32_t)((7200000.0f * _ACCELERATION) / _STEPS_PER_M[E]);
+      acc_ramp_div_P[2]=(uint32_t)((7200000.0f * ACCELERATION) / _STEPS_PER_M[Z]);
+      acc_ramp_div_P[3]=(uint32_t)((7200000.0f * ACCELERATION) / _STEPS_PER_M[E]);
 
 }
 
@@ -262,9 +262,9 @@ void dda_init(void) {
 	// set up default feedrate
 	if (startpoint.F == 0)
 		startpoint.F = next_target.target.F = SEARCH_FEEDRATE_Z;
-  if (startpoint.e_multiplier == 0)
+  //if (startpoint.e_multiplier == 0)
     startpoint.e_multiplier = next_target.target.e_multiplier = 256;
-  if (startpoint.f_multiplier == 0)
+  //if (startpoint.f_multiplier == 0)
     startpoint.f_multiplier = next_target.target.f_multiplier = 256;
 }
 
@@ -357,11 +357,11 @@ void dda_create(DDA *dda, const TARGET *target) {
 
   // Apply feedrate multiplier.
   
-  /*if (dda->endpoint.f_multiplier != 256 && ! dda->endstop_check) {
+  if (dda->endpoint.f_multiplier != 256 && ! dda->endstop_check) {
     dda->endpoint.F *= dda->endpoint.f_multiplier;
     dda->endpoint.F += 128;
     dda->endpoint.F /= 256;
-  }*/
+  }
 
   #ifdef LOOKAHEAD
     // Set the start and stop speeds to zero for now = full stops between
@@ -399,11 +399,11 @@ void dda_create(DDA *dda, const TARGET *target) {
   steps[E] = um_to_steps(target->axis[E], E);
 
   // Apply extrusion multiplier.
-  /*if (target->e_multiplier != 256) {
+  if (target->e_multiplier != 256) {
     steps[E] *= target->e_multiplier;
     steps[E] += 128;
     steps[E] /= 256;
-  }*/
+  }
   
 
   if ( ! target->e_relative) {
@@ -617,7 +617,7 @@ void dda_create(DDA *dda, const TARGET *target) {
       if (dda->rampup_steps > dda->total_steps / 2)
         dda->rampup_steps = dda->total_steps / 2;
       dda->rampdown_steps = dda->total_steps - dda->rampup_steps;
-      dda->rampdown_steps = 0;
+      //dda->rampdown_steps = 0;
       
        //sersendf_P(PSTR("md:%lu,F%lq,clim,%lu cmin:%lu,c:%lu\n"), move_duration, dda->endpoint.F,c_limit,dda->c_min, dda->c);  
       #ifdef LOOKAHEAD

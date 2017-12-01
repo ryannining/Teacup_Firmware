@@ -29,7 +29,7 @@ static uint8_t mb_head = 0;
 /// movebuffer tail pointer. Points to the currently executing move
 /// this variable is read/written both in and out of interrupts.
 uint8_t	mb_tail = 0;
-
+uint8_t	mb_ctr = 0;
 /// move buffer.
 /// holds move queue
 /// contents are read/written both in and out of interrupts, but
@@ -59,6 +59,10 @@ uint8_t queue_full() {
 // It calls a few other functions, though.
 // -------------------------------------------------------
 /// Take a step or go to the next move.
+uint8_t queue_len() {
+    mb_ctr=mb_head>=mb_tail?mb_head-mb_tail:(11+mb_head)-mb_tail; 
+    return mb_ctr;
+}
 void queue_step() {
 
   if (mb_tail_dda != NULL) {
@@ -74,6 +78,7 @@ void queue_step() {
     if (mb_tail != mb_head) {
       mb_tail = MB_NEXT(mb_tail);
       mb_tail_dda = &(movebuffer[mb_tail]);
+      //mb_ctr--;
       dda_start(mb_tail_dda);
     }
     else {
@@ -88,11 +93,11 @@ void queue_step() {
 void enqueue_home(TARGET *t, uint8_t endstop_check, uint8_t endstop_stop_cond) {
 	// don't call this function when the queue is full, but just in case, wait for a move to complete and free up the space for the passed target
 	while (queue_full())
-		delay_us(10);
+		delay_us(100);
     //sersendf_P(PSTR("F%lu X%lq Y%lq Z%lq E%lq\n"),t->F,t->axis[X], t->axis[Y],t->axis[Z],t->axis[E]  );      
 
   uint8_t h = MB_NEXT(mb_head);
-
+  //mb_ctr++;
 	DDA* new_movebuffer = &(movebuffer[h]);
 
   // Initialise queue entry to a known state. This also clears flags like

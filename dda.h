@@ -172,7 +172,7 @@ typedef struct {
   // These two are based on the "fast" axis, the axis with the most steps.
   uint32_t          start_steps; ///< would be required to reach start feedrate
   uint32_t          end_steps; ///< would be required to stop from end feedrate
-axes_int32_t      delta_um;  
+  //axes_int32_t      delta_um;  
 #endif
   // Number the moves to be able to test at the end of lookahead if the moves
   // are the same. Note: we do not need a lot of granularity here: more than

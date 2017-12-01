@@ -73,16 +73,22 @@ void clock_tick(void) {
 */
 static void clock_250ms(void) {
 
-  if (heaters_all_zero()) {
-		if (psu_timeout > (30 * 4)) {
-			power_off();
+  if (psu_timeout > (30 * 4))  {
+    //if (heaters_all_zero()) {
+        power_off();
+    /*} else {
+        stepper_disable();
+        x_disable();
+        y_disable();
+        z_disable();
+        e_disable();
     }
-    else {
-      ATOMIC_START
-        psu_timeout++;
-      ATOMIC_END
-		}
-	}
+    psu_timeout=0;
+     * */
+  }
+  ATOMIC_START
+    psu_timeout++;
+  ATOMIC_END
 
   temp_heater_tick();
 

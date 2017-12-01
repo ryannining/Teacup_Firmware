@@ -236,6 +236,7 @@
     <File Name="config/printer.minicnc.h"/>
     <File Name="config/printer.minicncnema14.h"/>
     <File Name="config/board.3dplex.h"/>
+    <File Name="config/printer.tarantole.h"/>
   </VirtualDirectory>
   <VirtualDirectory Name="configtool">
     <File Name="configtool/board.generic.h"/>

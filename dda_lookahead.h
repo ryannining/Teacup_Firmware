@@ -18,9 +18,9 @@ extern axes_uint32_t maximum_jerk_P;
 // Sanity: the acceleration of Teacup is not implemented properly; as such we can only
 // do move joining when all axis use the same steps per mm. This is usually not an issue
 // for X and Y.
-#if STEPS_PER_M_X != STEPS_PER_M_Y
-#error "Look-ahead requires steps per m to be identical on the X and Y axis (for now)"
-#endif
+//#if STEPS_PER_M_X != STEPS_PER_M_Y
+//#error "Look-ahead requires steps per m to be identical on the X and Y axis (for now)"
+//#endif
 
 #define MAX(a,b)  (((a)>(b))?(a):(b))
 #define MIN(a,b)  (((a)<(b))?(a):(b))

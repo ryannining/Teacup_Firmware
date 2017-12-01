@@ -59,6 +59,18 @@ uint16_t int_inv_sqrt(uint16_t a);
 // this is an ultra-crude pseudo-logarithm routine, such that:
 // 2 ^ msbloc(v) >= v
 const uint8_t msbloc (uint32_t v);
+/*! Acceleration ramp length in steps.
+ * \param feedrate Target feedrate of the accelerateion.
+ * \param fast_axis Number of the fastest axis.
+ * \return Accelerating steps neccessary to achieve target feedrate.
+ *
+ * s = 1/2 * a * t^2, v = a * t ==> s = v^2 / (2 * a)
+ * 7200000 = 60 * 60 * 1000 * 2 (mm/min -> mm/s, steps/m -> steps/mm, factor 2)
+ *
+ * Note: this function has shown to be accurate between 10 and 10'000 mm/s2 and
+ *       2000 to 4096000 steps/m (and higher). The numbers are a few percent
+ *       too high at very low acceleration. Test code see commit message.
+ */
 
 // Calculates acceleration ramp length in steps.
 uint32_t acc_ramp_len(uint32_t feedrate, uint8_t fast_axis);

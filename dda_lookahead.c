@@ -54,11 +54,11 @@ axes_uint32_t maximum_jerk_P = {
  * \return dda->crossF
  */
 void dda_find_crossing_speed(DDA *prev, DDA *current) {
-  uint32_t F, dv, speed_factor, max_speed_factor;
-  axes_int32_t prevF, currF;
+  uint32_t F, dv,prevF, currF, speed_factor, max_speed_factor;
+  //axes_int32_t ;
   enum axis_e i;
 
-  // Bail out if there's nothing to join (e.g. first movement after a pause).
+  // Bail out if there's nothing to join (e.g. G1 F1500).
   if ( ! prev)
     return;
 
@@ -67,7 +67,7 @@ void dda_find_crossing_speed(DDA *prev, DDA *current) {
   F = prev->endpoint.F;
   if (current->endpoint.F < F)
     F = current->endpoint.F;
-
+  max_speed_factor = (uint32_t)2 << 8;
   if (DEBUG_DDA && (debug_flags & DEBUG_DDA))
     sersendf_P(PSTR("Distance: %lu, then %lu\n"),
                prev->distance, current->distance);
@@ -78,17 +78,13 @@ void dda_find_crossing_speed(DDA *prev, DDA *current) {
   //       these 8 muldiv()s.
   //       Caveat: bail out condition above and some other non-continuous
   //               situations might need some extra code for handling.
-  for (i = X; i < E; i++) { // AXIS_COUNT
-    prevF[i] = muldiv(prev->delta[i], F, prev->total_steps);
-    currF[i] = muldiv(current->delta[i], F, current->total_steps);
-  }
 
-  if (DEBUG_DDA && (debug_flags & DEBUG_DDA))
+  
+  /**
+if (DEBUG_DDA && (debug_flags & DEBUG_DDA))
     sersendf_P(PSTR("prevF: %ld  %ld  %ld  %ld\ncurrF: %ld  %ld  %ld  %ld\n"),
                prevF[X], prevF[Y], prevF[Z], prevF[E],
                currF[X], currF[Y], currF[Z], currF[E]);
-
-  /**
    * What we want is (for each axis):
    *
    *   delta velocity = dv = |v1 - v2| < max_jerk
@@ -109,22 +105,33 @@ void dda_find_crossing_speed(DDA *prev, DDA *current) {
    *
    * See also: https://github.com/Traumflug/Teacup_Firmware/issues/45
    */
-  max_speed_factor = (uint32_t)2 << 8;
 
-  for (i = X; i < E; i++) { // AXIS_COUNT
-    if (get_direction(prev, i) == get_direction(current, i))
-      dv = (currF[i] > prevF[i] ? currF[i] - prevF[i] : prevF[i] - currF[i]);
-      
+
+//  for (i = X; i < AXIS_COUNT; i++) { // AXIS_COUNT
+//    prevF[i] = prev->delta[i]?muldiv(prev->delta[i], F, prev->total_steps):0;
+//  }
+  for (i = X; i < AXIS_COUNT; i++) {
+    if (!prev->delta[i])
+      prevF = muldiv(prev->delta[i], F, prev->total_steps);
     else
-      dv = (currF[i] + prevF[i])<<4;
-
+      prevF = 0;
+    if (!current->delta[i])
+      currF = muldiv(current->delta[i], F, current->total_steps);
+    else
+      currF = 0;
+    //if ((prev->delta[i]==0) && (current->delta[i]==0)) continue;  
+    //currF = current->delta[i]?muldiv(current->delta[i], F, current->total_steps):0;
+    if (get_direction(prev, i) == get_direction(current, i))
+      dv = currF > prevF ? currF - prevF : prevF - currF;
+    else
+      dv = currF + prevF;
     if (dv) {
-      speed_factor = ((uint32_t)pgm_read_dword(&maximum_jerk_P[i]) << 8) / dv;
+      speed_factor = ((uint32_t)(maximum_jerk_P[i]) << 8) / dv;
       if (speed_factor < max_speed_factor)
         max_speed_factor = speed_factor;
       if (DEBUG_DDA && (debug_flags & DEBUG_DDA))
         sersendf_P(PSTR("%c: dv %lu of %lu   factor %lu of %lu\n"),
-                   'X' + i, dv, (uint32_t)pgm_read_dword(&maximum_jerk_P[i]),
+                   'X' + i, dv, (uint32_t)(maximum_jerk_P[i]),
                    speed_factor, (uint32_t)1 << 8);
     }
   }
@@ -133,7 +140,7 @@ void dda_find_crossing_speed(DDA *prev, DDA *current) {
     current->crossF = F;
   else
     current->crossF = (F * max_speed_factor) >> 8;
-
+  //current->crossF = F;
   if (DEBUG_DDA && (debug_flags & DEBUG_DDA))
     sersendf_P(PSTR("Cross speed reduction from %lu to %lu\n"),
                F, current->crossF);
@@ -186,8 +193,8 @@ void dda_join_moves(DDA *prev, DDA *current) {
   moveno++;
   #endif
 
-  // Bail out if there's nothing to join.
-  if ( ! prev || current->crossF == 0)
+  // Bail out if there's nothing to join (e.g. G1 F1500).
+   if ( ! prev || current->crossF == 0)
     return;
 
     // Show the proposed crossing speed - this might get adjusted below.

@@ -110,7 +110,7 @@
 */
 #define SEARCH_FEEDRATE_X        1800
 #define SEARCH_FEEDRATE_Y        1800
-#define SEARCH_FEEDRATE_Z        120
+#define SEARCH_FEEDRATE_Z        600
 
 /** \def ENDSTOP_CLEARANCE_X ENDSTOP_CLEARANCE_Y ENDSTOP_CLEARANCE_Z
 
@@ -219,8 +219,8 @@
 */
 #define MAX_JERK_X               1200
 #define MAX_JERK_Y               1200
-#define MAX_JERK_Z               200
-#define MAX_JERK_E               200
+#define MAX_JERK_Z               400
+#define MAX_JERK_E               400
 
 
 /***************************************************************************\
@@ -262,7 +262,7 @@
 
   This option has no effect on controllers with a common stepper enable pin.
 */
-#define Z_AUTODISABLE
+//#define Z_AUTODISABLE
 
 /** \def TEMP_HYSTERESIS
   Actual temperature must be target +/- this hysteresis before target
@@ -345,7 +345,7 @@
   math (hence time) to set up so a longer buffer allows more of the math to
   be done during preceding longer moves.
 */
-#define MOVEBUFFER_SIZE          8
+#define MOVEBUFFER_SIZE          12
 
 /** \def DC_EXTRUDER DC_EXTRUDER_PWM
   If you have a DC motor extruder, configure it as a "heater" above and define
@@ -369,7 +369,7 @@
   order to calculate derivative in PID loop higher values make PID derivative
   term more stable at the expense of reaction time.
 */
-#define TH_COUNT                 8
+#define TH_COUNT                 6
 
 /** \def FAST_PWM
   Teacup offers two PWM frequencies, 76(61) Hz and 78000(62500) Hz on a

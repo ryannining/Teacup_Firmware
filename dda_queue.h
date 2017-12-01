@@ -14,7 +14,8 @@
 extern uint8_t mb_tail;
 extern DDA movebuffer[MOVEBUFFER_SIZE];
 extern DDA *mb_tail_dda;
-
+extern uint8_t	mb_ctr;
+//int8_t queue_len();
 /*
   methods
 */

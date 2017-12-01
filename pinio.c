@@ -139,7 +139,7 @@ void power_on() {
 		ps_is_on = 1;
 	}
 
-	psu_timeout = 0;
+	//psu_timeout = 0;
 }
 
 void power_off() {

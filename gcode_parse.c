@@ -291,7 +291,7 @@ uint8_t gcode_parse_char(uint8_t c) {
 					if ((next_target.M == 104) || (next_target.M == 109) || (next_target.M == 140))
 						next_target.S = decfloat_to_int(&read_digit, 4);
 					// if this is heater PID stuff, multiply by PID_SCALE because we divide by PID_SCALE later on
-					else if ((next_target.M >= 206))
+					else if ((next_target.M == 206))
 						next_target.S = decfloat_to_int1000();
 					else if ((next_target.M >= 130) && (next_target.M <= 132))
 						next_target.S = decfloat_to_int(&read_digit, PID_SCALE);

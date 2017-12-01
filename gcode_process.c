@@ -43,6 +43,12 @@ extern axes_uint32_t  maximum_feedrate_P;
 
 *//*************************************************************************/
 
+int32_t lastE,lastZ;
+int32_t EEMEM EE_retract;
+int32_t EEMEM EE_retractZ;
+int32_t EEMEM EE_retractF;
+int8_t inretract;
+
 
 void process_gcode_command() {
 	uint32_t	backup_f;
@@ -131,6 +137,32 @@ void process_gcode_command() {
 				//?
         temp_wait();
                 //next_target.target.axis[E]=0;
+                // auto retraction change
+                uint32_t retr=eeprom_read_dword((uint32_t *) &EE_retract);
+                if (retr && !next_target.option_all_relative) {
+                    if (next_target.seen_E){
+                        if ( next_target.seen_F  && lastE && (next_target.target.axis[E]<lastE) && !(next_target.seen_X || next_target.seen_Y || next_target.seen_Z )){
+                                // retract
+                                next_target.target.axis[E]=lastE - retr; 
+                                next_target.target.F=eeprom_read_dword((uint32_t *) &EE_retractF);
+                                inretract=1;
+                        } else {
+                            lastE=next_target.target.axis[E];
+                            //inretract=0;
+                        }
+                    }
+                    // auto z hop  change
+                    if (next_target.seen_Z) {
+                        if (inretract && (next_target.target.axis[Z]>lastZ)){
+                            next_target.target.axis[Z]=lastZ + eeprom_read_dword((uint32_t *) &EE_retractZ); 
+                            inretract=0;
+                        } else {
+                            lastZ=next_target.target.axis[Z];
+                        }
+                        
+                    } 
+                } 
+                
 				if (next_target.target.F>maximum_feedrate_P[X]) next_target.target.F=maximum_feedrate_P[X];
 				enqueue(&next_target.target);
 				break;
@@ -213,7 +245,8 @@ void process_gcode_command() {
 				queue_wait();
 
 				if (next_target.seen_X) {
-					#if defined	X_MIN_PIN
+					next_target.target.axis[X] =0;
+                    #if defined	X_MIN_PIN
 						home_x_negative();
 					#elif defined X_MAX_PIN
 						home_x_positive();
@@ -221,7 +254,8 @@ void process_gcode_command() {
 					axisSelected = 1;
 				}
 				if (next_target.seen_Y) {
-					#if defined	Y_MIN_PIN
+					next_target.target.axis[Y] =0;
+                    #if defined	Y_MIN_PIN
 						home_y_negative();
 					#elif defined Y_MAX_PIN
 						home_y_positive();
@@ -229,11 +263,12 @@ void process_gcode_command() {
 					axisSelected = 1;
 				}
 				if (next_target.seen_Z) {
-          #if defined Z_MIN_PIN
-            home_z_negative();
-          #elif defined Z_MAX_PIN
-            home_z_positive();
-					#endif
+                    //next_target.target.axis[Z] =0;
+                      #if defined Z_MIN_PIN
+                        home_z_negative();
+                      #elif defined Z_MAX_PIN
+                        home_z_positive();
+                    #endif
 					axisSelected = 1;
 				}
 				// there's no point in moving E, as E has no endstops
@@ -245,14 +280,16 @@ void process_gcode_command() {
                      #else
 				backup_f = next_target.target.F;
 				next_target.target.F = MAXIMUM_FEEDRATE_X * 2L;
-				next_target.target.axis[X]=0;
-                next_target.target.axis[Y]=0;
-                
+				next_target.target.axis[X] =
+                next_target.target.axis[Y] =0;
+                //next_target.target.axis[Z] =0;                
  
                 enqueue(&next_target.target);
 				next_target.target.F = backup_f;
 					
                     home();
+                    startpoint.axis[E] = next_target.target.axis[E] = 0;
+                    dda_new_startpoint();
                     #endif
 				}
                 update_current_position();
@@ -316,7 +353,8 @@ void process_gcode_command() {
 					axisSelected = 1;
 				}
 				if (next_target.seen_E) {
-          startpoint.axis[E] = next_target.target.axis[E];
+          lastE=startpoint.axis[E] = next_target.target.axis[E];
+                    
 					axisSelected = 1;
 				}
 
@@ -551,8 +589,11 @@ void process_gcode_command() {
 				if ( ! next_target.seen_P)
 					next_target.P = TEMP_SENSOR_none;
 				temp_print(next_target.P);
-                sersendf_P(PSTR("FlowMultiply: %d\n"), (next_target.target.f_multiplier*100)>>8);
-                sersendf_P(PSTR("SpeedMultiply: %d\n"), (next_target.target.f_multiplier*100)>>8);
+                sersendf_P(PSTR("FlowMultiply: %d\n"), (next_target.target.e_multiplier*100/256));
+                sersendf_P(PSTR("SpeedMultiply: %d\n"), (next_target.target.f_multiplier*100/256));
+                //print_queue();
+                //queue_len();
+                //sersendf_P(PSTR("Buffer: %d\n"), (mb_ctr));
                 
 				break;
 
@@ -860,6 +901,9 @@ void process_gcode_command() {
                 sersendf_P(PSTR("EPR:2 39 %lu XYJerk\n"),eeprom_read_dword((uint32_t *) &EE_jerkx));
                 sersendf_P(PSTR("EPR:2 47 %lu Zjerk\n"),eeprom_read_dword((uint32_t *) &EE_jerkz));
                 sersendf_P(PSTR("EPR:3 51 %lq Accel\n"),eeprom_read_dword((uint32_t *) &EE_accel));
+                sersendf_P(PSTR("EPR:3 55 %lq Retract\n"),eeprom_read_dword((uint32_t *) &EE_retract));
+                sersendf_P(PSTR("EPR:3 59 %lu Retract F\n"),eeprom_read_dword((uint32_t *) &EE_retractF));
+                sersendf_P(PSTR("EPR:3 63 %lq Retract Z\n"),eeprom_read_dword((uint32_t *) &EE_retractZ));
 
                 #ifdef DELTA_PRINTER
                 sersendf_P(PSTR("EPR:3 133 %lq OfX\n"),eeprom_read_dword((uint32_t *) &EE_x_endstop_adj));
@@ -910,6 +954,9 @@ void process_gcode_command() {
                     case 27:
                         eeprom_write_dword((uint32_t *) &EE_mfe,next_target.S/1000);
                         break;    
+                    case 59:
+                        eeprom_write_dword((uint32_t *) &EE_retractF,next_target.S/1000);
+                        break;    
                     case 39:
                         eeprom_write_dword((uint32_t *) &EE_jerkx,next_target.S/1000);
                         break;
@@ -919,6 +966,12 @@ void process_gcode_command() {
                     case 51:
                         eeprom_write_dword((uint32_t *) &EE_accel,next_target.S);
                         break;
+                    case 55:
+                        eeprom_write_dword((uint32_t *) &EE_retract,next_target.S);
+                        break;  
+                    case 63:
+                        eeprom_write_dword((uint32_t *) &EE_retractZ,next_target.S);
+                        break;  
                     #ifdef DELTA_PRINTER
                     case 133:
                         eeprom_write_dword((uint32_t *) &EE_x_endstop_adj,next_target.S);
