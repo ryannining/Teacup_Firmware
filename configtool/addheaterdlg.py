@@ -81,7 +81,7 @@ class AddHeaterDlg(wx.Dialog):
     self.bSave.Bind(wx.EVT_BUTTON, self.onSave)
     bsz.Add(self.bSave)
 
-    bsz.Add(30, 100)
+    bsz.Add((30, 100))
 
     self.bCancel = wx.Button(self, wx.ID_ANY, "Cancel", size = BSIZESMALL)
     self.bCancel.SetFont(font)
