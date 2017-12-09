@@ -3,7 +3,7 @@
 #define	TXD					DIO1
 
 // SPI
-#define	SCK					DIO13
+//#define	SCK					DIO13
 #define	MISO				DIO12
 #define	MOSI				DIO11
 #define	SS					DIO10

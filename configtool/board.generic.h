@@ -43,8 +43,8 @@
 *                                                                           *
 \***************************************************************************/
 
-#define TX_ENABLE_PIN            DIO12
-#define RX_ENABLE_PIN            DIO13
+//#define TX_ENABLE_PIN            DIO12
+//#define RX_ENABLE_PIN            DIO13
 
 #define X_STEP_PIN               DIO54
 #define X_DIR_PIN                DIO55
@@ -105,7 +105,7 @@
   a LED in hardware), see
   http://reprap.org/wiki/Teacup_Firmware#Doing_precision_profiling
 */
-#define DEBUG_LED_PIN            DIO13
+//#define DEBUG_LED_PIN            DIO13
 
 /** \def SD_CARD_SELECT_PIN
 

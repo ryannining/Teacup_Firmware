@@ -45,12 +45,12 @@
 *                                                                           *
 \***************************************************************************/
 
-#define TX_ENABLE_PIN            DIO12
-#define RX_ENABLE_PIN            DIO13
+//#define TX_ENABLE_PIN            DIO12
+//#define RX_ENABLE_PIN            DIO13
 
 #define X_STEP_PIN               DIO4
 #define X_DIR_PIN                DIO6
-#define X_MIN_PIN                AIO1
+//#define X_MIN_PIN                AIO1
 //#define X_MAX_PIN                AIO1
 #define X_ENABLE_PIN             DIO2
 //#define X_INVERT_DIR
@@ -61,7 +61,7 @@
 
 #define Y_STEP_PIN               DIO8
 #define Y_DIR_PIN                DIO9
-#define Y_MIN_PIN                AIO0
+//#define Y_MIN_PIN                DIO13
 //#define Y_MAX_PIN                DIO11
 #define Y_ENABLE_PIN             DIO7
 //#define Y_INVERT_DIR
@@ -70,11 +70,11 @@
 //#define Y_UL4_PIN                DIO24
 #define Y_INVERT_ENABLE
 
-#define Z_STEP_PIN               DIO8
-#define Z_DIR_PIN                DIO9
+#define Z_STEP_PIN               AIO4
+#define Z_DIR_PIN                AIO5
 //#define Z_MIN_PIN                AIO2
-#define Z_MAX_PIN                DIO12
-#define Z_ENABLE_PIN             DIO13
+#define Z_MAX_PIN                DIO13
+#define Z_ENABLE_PIN             DIO10
 //#define Z_UL4_PIN                DIO62
 //#define Z_INVERT_DIR
 //#define Z_INVERT_MIN
@@ -188,7 +188,7 @@
 */
 //DEFINE_TEMP_SENSORS_START
 //                 name      type           pin    additional
-DEFINE_TEMP_SENSOR(extruder, TT_THERMISTOR, AIO7,  THERMISTOR_EXTRUDER)
+DEFINE_TEMP_SENSOR(extruder, TT_THERMISTOR, AIO6,  THERMISTOR_EXTRUDER)
 
 // Beta algorithm      r0      beta  r2    vadc
 // Steinhart-Hart      rp      t0    r0      t1    r1      t2    r2

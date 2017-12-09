@@ -158,7 +158,7 @@
 //#define Y_MAX                    200.0
 
 //#define Z_MIN                    0.0
-#define Z_MAX                    85
+#define Z_MAX                    84
 
 /** \def E_ABSOLUTE
   Some G-code creators produce relative length commands for the extruder,

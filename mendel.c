@@ -127,7 +127,8 @@ void init(void) {
 	serial_writestr_P(PSTR("start\nok\n"));
     power_off();
     heater_set(HEATER_FAN, 128);
-    
+    SET_INPUT(DIO13);
+    PULL_OFF(DIO13);
 
 }
 
